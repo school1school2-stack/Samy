@@ -12,8 +12,7 @@
         :root {
             --bg: #f8fafc; --card-bg: #ffffff; --accent: #0284c7;
             --gold: #b45309; --danger: #dc2626; --text-main: #1e293b;
-            --text-sub: #64748b; --border: #e2e8f0;
-            --row-alt: #fffdec;
+            --text-sub: #64748b; --border: #e2e8f0; --row-alt: #fffdec;
             --correct-bg: #dcfce7; --correct-text: #166534;
             --wrong-bg: #fee2e2; --wrong-text: #991b1b;
         }
@@ -44,42 +43,25 @@
         .rankings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
         @media (max-width: 768px) { .rankings-grid { grid-template-columns: 1fr; } }
 
-        .rank-card { background: var(--card-bg); padding: 20px; border-radius: 18px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .rank-card { background: var(--card-bg); padding: 20px; border-radius: 18px; border: 1px solid var(--border); }
         .rank-card.top { border-right: 6px solid #10b981; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); }
         .rank-card.bottom { border-right: 6px solid #ef4444; background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%); }
-        
         .rank-title { font-size: 1.05rem; font-weight: bold; margin: 0 0 12px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 8px; }
-        .rank-card.top .rank-title { color: #15803d; }
-        .rank-card.bottom .rank-title { color: #b91c1c; }
-
-        .rank-list { margin: 0; padding-right: 20px; font-size: 0.9rem; line-height: 1.8; }
-        .rank-list li { margin-bottom: 4px; }
 
         .search-box { margin-bottom: 15px; display: flex; gap: 10px; align-items: center; background: white; padding: 15px 20px; border-radius: 15px; border: 1px solid var(--border); }
-        .search-box input { flex: 1; padding: 10px 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; outline: none; transition: 0.2s; }
-        .search-box input:focus { border-color: var(--accent); }
-        .search-box button { background: #f1f5f9; border: 1px solid var(--border); padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; color: var(--text-sub); }
+        .search-box input { flex: 1; padding: 10px 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; outline: none; }
 
         .table-box { background: var(--card-bg); border-radius: 20px; overflow-x: auto; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; text-align: right; min-width: 1000px; }
         th { background: #f8fafc; padding: 15px; color: var(--text-sub); border-bottom: 2px solid var(--border); font-size: 0.85rem; }
         td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        
         tbody tr:nth-child(even) { background-color: var(--row-alt); }
-        tbody tr:hover { background-color: #f1f5f9; }
-
-        .prog-circle { width: 45px; height: 6px; background: #eee; border-radius: 10px; overflow: hidden; margin-top: 4px; }
-        .prog-fill { height: 100%; }
 
         .action-btn { border: none; background: none; cursor: pointer; font-weight: bold; font-size: 0.88rem; padding: 5px 10px; border-radius: 8px; transition: all 0.2s; }
         .btn-level { color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; }
-        .btn-level:hover { background: #0284c7; color: white; }
         .btn-review { color: #16a34a; background: #dcfce7; border: 1px solid #bbf7d0; margin-left: 5px; }
-        .btn-review:hover { background: #16a34a; color: white; }
         .btn-edit-name { color: #b45309; background: #fef3c7; border: 1px solid #fde68a; margin-left: 5px; }
-        .btn-edit-name:hover { background: #b45309; color: white; }
         .btn-delete { color: #dc2626; background: #fee2e2; border: 1px solid #fecaca; }
-        .btn-delete:hover { background: #dc2626; color: white; }
 
         #qr-modal, #review-modal, #student-report-modal, #edit-name-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 25px; text-align: center; max-width: 500px; width: 95%; max-height: 85vh; overflow-y: auto; position: relative; }
@@ -88,21 +70,7 @@
         .answer-card { padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); line-height: 1.6; }
         .ans-correct { background: var(--correct-bg); color: var(--correct-text); border-color: #bbf7d0; }
         .ans-wrong { background: var(--wrong-bg); color: var(--wrong-text); border-color: #fecaca; }
-
-        .time-box { display: flex; gap: 10px; justify-content: space-between; margin: 10px 0; background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.85rem; }
-        .time-item { flex: 1; text-align: center; }
-        .time-item span { display: block; font-weight: bold; margin-top: 4px; color: var(--accent); }
-
-        .trend-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; margin: 5px 0 10px 0; }
-        .trend-up { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-        .trend-down { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-        .trend-flat { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
-
-        .report-chart-box { position: relative; height: 280px; margin: 15px 0; border: 1px solid var(--border); border-radius: 15px; padding: 15px; background: #fafafa; }
         .close-btn { background: var(--text-main); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 15px; }
-        .view-only-hide { display: none !important; }
-
-        @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body>
@@ -147,7 +115,7 @@
 
     <div class="search-box no-print">
         <input type="text" id="student-search-input" placeholder="🔍 ابحث عن اسم الطالب..." oninput="filterTableBySearch()">
-        <button onclick="clearSearch()">مسح</button>
+        <button onclick="clearSearch()" style="background:#f1f5f9; border:1px solid var(--border); padding:10px 15px; border-radius:10px; cursor:pointer; font-weight:bold;">مسح</button>
     </div>
 
     <div class="table-box">
@@ -172,32 +140,6 @@
     </div>
 </div>
 
-<!-- نافذة تعديل اسم الطالب -->
-<div id="edit-name-modal">
-    <div class="modal-content" style="text-align: right;">
-        <h3 style="color: var(--accent); margin-top: 0;">✏️ تعديل اسم الطالب</h3>
-        <input type="hidden" id="edit-doc-id">
-        <input type="hidden" id="edit-student-email">
-        <label style="font-weight: bold; display: block; margin-bottom: 5px;">الاسم الصحيح الجديد:</label>
-        <input type="text" id="new-student-name-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; box-sizing: border-box; margin-bottom: 15px;">
-        <div style="text-align: center;">
-            <button class="close-btn" style="background: var(--accent); margin-left: 10px;" onclick="saveNewStudentName()">حفظ التعديل</button>
-            <button class="close-btn" style="background: #666;" onclick="closeModal('edit-name-modal')">إغلاق</button>
-        </div>
-    </div>
-</div>
-
-<!-- نافذة QR Code -->
-<div id="qr-modal">
-    <div class="modal-content">
-        <h3>مشاركة تقرير اللوحة (للعرض فقط)</h3>
-        <div id="qrcode" style="display: flex; justify-content: center; margin: 20px 0;"></div>
-        <input type="text" id="share-url" readonly style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; text-align: center;">
-        <button class="close-btn" onclick="copyLink()">نسخ الرابط</button>
-        <button class="close-btn" style="background:#666" onclick="closeModal('qr-modal')">إغلاق</button>
-    </div>
-</div>
-
 <!-- نافذة مراجعة إجابات الطالب -->
 <div id="review-modal">
     <div class="modal-content">
@@ -208,34 +150,28 @@
     </div>
 </div>
 
-<!-- نافذة التقرير الذكي والتراكمي للطالب -->
-<div id="student-report-modal">
+<!-- باقي النوافذ (تعديل الاسم والتقرير والـ QR) -->
+<div id="edit-name-modal">
+    <div class="modal-content" style="text-align: right;">
+        <h3 style="color: var(--accent); margin-top: 0;">✏️ تعديل اسم الطالب</h3>
+        <input type="hidden" id="edit-doc-id">
+        <input type="hidden" id="edit-student-email">
+        <label style="font-weight: bold; display: block; margin-bottom: 5px;">الاسم الصحيح الجديد:</label>
+        <input type="text" id="new-student-name-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; box-sizing: border-box; margin-bottom: 15px;">
+        <div style="text-align: center;">
+            <button class="close-btn" style="background: var(--accent); margin-left: 10px;" onclick="saveNewStudentName()">حفظ</button>
+            <button class="close-btn" style="background: #666;" onclick="closeModal('edit-name-modal')">إغلاق</button>
+        </div>
+    </div>
+</div>
+
+<div id="qr-modal">
     <div class="modal-content">
-        <h2 id="report-student-name" style="margin:0 0 5px 0; color:var(--accent);">تقرير أداء الطالب</h2>
-        
-        <div class="time-box">
-            <div class="time-item">🕒 آخر اختبار: <span id="last-test-time">-</span></div>
-            <div class="time-item" style="border-right:1px solid #e2e8f0;">📅 الاختبار القادم: <span id="next-test-time" style="color:#059669;">-</span></div>
-        </div>
-
-        <div id="trend-indicator-box"></div>
-        <div class="report-chart-box"><canvas id="studentProgressChart"></canvas></div>
-
-        <h4 style="margin: 10px 0 8px 0;">📋 سجل النماذج:</h4>
-        <div style="overflow-x:auto;">
-            <table style="width:100%; border:1px solid var(--border); font-size:0.85rem;" id="student-models-table">
-                <thead>
-                    <tr style="background:#f1f5f9;">
-                        <th style="padding:8px; text-align:right;">النموذج</th>
-                        <th style="padding:8px; text-align:center;">التاريخ</th>
-                        <th style="padding:8px; text-align:center;">الدرجة</th>
-                        <th style="padding:8px; text-align:center;">النسبة والتصنيف</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <button class="close-btn" onclick="closeModal('student-report-modal')">إغلاق التقرير</button>
+        <h3>مشاركة تقرير اللوحة</h3>
+        <div id="qrcode" style="display: flex; justify-content: center; margin: 20px 0;"></div>
+        <input type="text" id="share-url" readonly style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; text-align: center;">
+        <button class="close-btn" onclick="copyLink()">نسخ الرابط</button>
+        <button class="close-btn" style="background:#666" onclick="closeModal('qr-modal')">إغلاق</button>
     </div>
 </div>
 
@@ -253,22 +189,15 @@
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    const db = firebase.firestore(); // ربط Firestore الموحد لمشروع الدكتور سامي
+    const db = firebase.firestore();
     const dbRef = database.ref("quran_results");
 
-    let chartA, chartB, studentLineChart = null;
+    let chartA, chartB = null;
     let selectedModel = 'all';
     let globalSnapshotData = []; 
     let currentFilteredQuery = '';
-
     const urlParams = new URLSearchParams(window.location.search);
     const isViewOnly = urlParams.has('view');
-
-    function calculateStudentSkills(d, p) {
-        if (d.sections && typeof d.sections === 'object') return d.sections;
-        let skills = { est: p, ikm: p, swh: p, arb: p, sah: p, math: p };
-        return skills;
-    }
 
     function initListener(modelId) {
         if(isViewOnly) document.getElementById('action-header').classList.add('view-only-hide');
@@ -321,23 +250,20 @@
                 else if(p >= 60) levels.acc++;
                 else levels.weak++;
 
-                let s = calculateStudentSkills(d, p);
+                let s = d.sections || { est: p, ikm: p, swh: p, arb: p, sah: p, math: p };
                 Object.keys(skillsSums).forEach(k => skillsSums[k] += (s[k] !== undefined ? s[k] : p));
 
                 rows += `<tr>
                     <td><strong>${d.name}</strong></td>
                     <td style="color:var(--accent); font-weight:bold">${d.score}/${totalScore}</td>${['est','ikm','swh','arb','sah','math'].map(k => {
                         let val = s[k] !== undefined ? s[k] : p;
-                        return `<td>${val}%<div class="prog-circle"><div class="prog-fill" style="width:${val}\%; background:${val<60?'#ef4444':val<80?'#f59e0b':'#10b981'}"></div></div></td>`;
+                        return `<td>${val}%</td>`;
                     }).join('')}
                     <td>${actualModel}</td>
                     <td class="no-print">
-                        <button class="action-btn btn-level" data-student="${encodeURIComponent(d.name)}" onclick="openStudentReportFromAttr(this)">📊 المستوى</button>
-                    </td>
-                    <td class="no-print ${isViewOnly ? 'view-only-hide' : ''}">
-                        <button class="action-btn btn-review" onclick="openReview('${d.id}')">👁 مراجعة</button>
+                        <button class="action-btn btn-review" onclick="openReview('${d.id}')">👁 مراجعة الإجابات ونوعها</button>
                         <button class="action-btn btn-edit-name" onclick="openEditNameModal('${d.id}', '${d.name}', '${d.email || ''}')">✏️ تعديل</button>
-                        <button class="action-btn btn-delete" onclick="deleteDoc('${d.id}', '${d.email || ''}', '${actualModel}')">حذف وسماح بالإعادة</button>
+                        <button class="action-btn btn-delete" onclick="deleteDoc('${d.id}', '${d.email || ''}', '${actualModel}')">حذف</button>
                     </td>
                 </tr>`;
             }
@@ -348,6 +274,28 @@
         updateRankings(studentsList);
         let avgSkills = ['est','ikm','swh','arb','sah','math'].map(k => studentCount > 0 ? Math.round(skillsSums[k] / studentCount) : 0);
         drawCharts(levels, avgSkills);
+    }
+
+    async function openReview(docId) {
+        const snap = await database.ref("quran_results/" + docId).once('value');
+        const data = snap.val();
+        document.getElementById('review-student-name').innerText = `مراجعة إجابات الطالب (${data.name}) ونوع الأسئلة`;
+        const listContainer = document.getElementById('review-list');
+        listContainer.innerHTML = "";
+
+        if (data.answers && data.answers.length > 0) {
+            data.answers.forEach((ans, index) => {
+                const qTypeBadge = ans.qType ? `<span style="background:#e0f2fe; color:#0284c7; padding:2px 8px; border-radius:6px; font-size:0.8rem; margin-right:8px;">نوع السؤال: ${ans.qType}</span>` : '';
+                listContainer.innerHTML += `<div class="answer-card ${ans.isCorrect ? 'ans-correct' : 'ans-wrong'}">
+                    <strong>س ${index + 1}: ${ans.qText}</strong> ${qTypeBadge}<br>
+                    <span>إجابة الطالب: ${ans.studentAns || 'بدون إجابة'} ${ans.isCorrect ? '✅' : '❌'}</span><br>
+                    ${!ans.isCorrect ? `<span>الإجابة الصحيحة: ${ans.correctAns}</span>` : ''}
+                </div>`;
+            });
+        } else {
+            listContainer.innerHTML = "<p style='text-align:center;'>لا توجد تفاصيل إجابات محفوظة.</p>";
+        }
+        document.getElementById('review-modal').style.display = 'flex';
     }
 
     function openEditNameModal(docId, currentName, studentEmail) {
@@ -361,165 +309,42 @@
         const docId = document.getElementById('edit-doc-id').value;
         const studentEmail = document.getElementById('edit-student-email').value;
         const newName = document.getElementById('new-student-name-input').value.trim();
-        
         if (!newName) return alert('الرجاء إدخال اسم صحيح.');
 
         try {
-            // تحديث الاسم في Realtime Database
             await database.ref("quran_results/" + docId).update({ name: newName });
-
-            // تحديث الاسم في Firestore أيضاً إن وجد إيميل للطالب
             if (studentEmail) {
                 const fsSnap = await db.collection("alkfaeat_results").where("email", "==", studentEmail).get();
-                fsSnap.forEach(async (doc) => {
-                    await db.collection("alkfaeat_results").doc(doc.id).update({ name: newName });
-                });
+                fsSnap.forEach(async (doc) => { await db.collection("alkfaeat_results").doc(doc.id).update({ name: newName }); });
             }
-
             closeModal('edit-name-modal');
-            alert('تم تحديث اسم الطالب بنجاح في السحابتين!');
-        } catch (error) {
-            console.error(error);
-            alert('حدث خطأ أثناء تحديث الاسم.');
-        }
+            alert('تم تحديث اسم الطالب بنجاح!');
+        } catch (error) { alert('حدث خطأ أثناء تحديث الاسم.'); }
     }
 
-    // ⭐ الدالة المحدثة لحذف الطالب من السحابتين معاً (لإلغاء حظر الإعادة فوراً)
     async function deleteDoc(rtdbId, studentEmail, modelId) {
         if(isViewOnly) return;
-        if(!confirm("هل أنت متأكد من حذف هذا الاختبار نهائياً؟ سيتمكن الطالب من إعادة الاختبار من جديد.")) return;
-        
+        if(!confirm("هل أنت متأكد من حذف هذا الاختبار نهائياً؟ سيتمكن الطالب من إعادة الاختبار.")) return;
         try {
-            // 1. الحذف من Realtime Database
             await database.ref("quran_results/" + rtdbId).remove();
-
-            // 2. الحذف من Firestore (حسب الإيميل ورقم النموذج لتصفية حالة منع التكرار)
             if (studentEmail && modelId) {
-                const fsQuery = await db.collection("alkfaeat_results")
-                    .where("email", "==", studentEmail)
-                    .where("model_id", "==", modelId)
-                    .get();
-
-                fsQuery.forEach(async (docSnap) => {
-                    await db.collection("alkfaeat_results").doc(docSnap.id).delete();
-                });
+                const fsQuery = await db.collection("alkfaeat_results").where("email", "==", studentEmail).where("model_id", "==", modelId).get();
+                fsQuery.forEach(async (docSnap) => { await db.collection("alkfaeat_results").doc(docSnap.id).delete(); });
             }
-
-            alert("تم حذف سجل الطالب نهائياً من اللوحة والسحابة، ويمكنه الآن إعادة الاختبار.");
-        } catch (error) {
-            console.error("خطأ أثناء الحذف: ", error);
-            alert("حدث خطأ أثناء محاولة الحذف.");
-        }
+            alert("تم حذف سجل الطالب بنجاح، ويمكنه إعادة الاختبار الآن.");
+        } catch (error) { alert("حدث خطأ أثناء الحذف."); }
     }
 
     async function deleteEntireModel(modelId) {
         if(isViewOnly) return;
-        if(confirm(`تنبيه: هل أنت متأكد من حذف وتصفير جميع نتائج النموذج (${modelId})؟`)) {
+        if(confirm(`تنبيه: حذف وتصفير جميع نتائج النموذج (${modelId})؟`)) {
             const snap = await database.ref("quran_results").orderByChild("model_id").equalTo(modelId).once('value');
             snap.forEach(child => child.ref.remove());
-
             const fsSnap = await db.collection("alkfaeat_results").where("model_id", "==", modelId).get();
-            fsSnap.forEach(async (doc) => {
-                await db.collection("alkfaeat_results").doc(doc.id).delete();
-            });
-
-            alert("تم تصفير النموذج بنجاح من اللوحة وقاعدة البيانات.");
+            fsSnap.forEach(async (doc) => { await db.collection("alkfaeat_results").doc(doc.id).delete(); });
+            alert("تم تصفير النموذج بنجاح.");
             setMod('all');
         }
-    }
-
-    // باقي الدوال المساعدة والرسوم البيانية...
-    function openStudentReportFromAttr(element) {
-        const rawName = element.getAttribute('data-student');
-        if (rawName) openStudentReport(decodeURIComponent(rawName));
-    }
-
-    function getGradeInfo(pct) {
-        if(pct >= 90) return { text: "ممتاز 🟢", color: "#166534", bg: "#dcfce7" };
-        if(pct >= 80) return { text: "جيد جداً 🔵", color: "#0284c7", bg: "#e0f2fe" };
-        if(pct >= 70) return { text: "جيد 🟡", color: "#b45309", bg: "#fef3c7" };
-        if(pct >= 60) return { text: "مقبول 🟠", color: "#d97706", bg: "#ffedd5" };
-        return { text: "ضعيف 🔴", color: "#dc2626", bg: "#fee2e2" };
-    }
-
-    function formatDateTime(timeVal) {
-        if (!timeVal) return "غير مسجل";
-        let dateObj = (typeof timeVal === 'number' || typeof timeVal === 'string') ? new Date(timeVal) : new Date();
-        return dateObj.toLocaleString('ar-SA', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    }
-
-    function getNextTestTime(timeVal) {
-        if (!timeVal) return "يحدد لاحقاً";
-        let dateObj = new Date(timeVal);
-        dateObj.setDate(dateObj.getDate() + 7);
-        return dateObj.toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'short' });
-    }
-
-    function openStudentReport(studentName) {
-        document.getElementById('report-student-name').innerText = `👤 تقرير أداء الطالب: ${studentName}`;
-        let studentRecords = globalSnapshotData.filter(item => item.name === studentName);
-        if (studentRecords.length === 0) return;
-
-        let labels = [], percentages = [], barColors = [], tableRowsHtml = "";
-        let lastRecord = studentRecords[studentRecords.length - 1];
-        document.getElementById('last-test-time').innerText = formatDateTime(lastRecord.timestamp || lastRecord.time);
-        document.getElementById('next-test-time').innerText = getNextTestTime(lastRecord.timestamp || lastRecord.time);
-
-        studentRecords.forEach(rec => {
-            let mName = rec.model_id || 'اختبار القرآن';
-            let totalScore = rec.total || 100;
-            let pct = Math.round((rec.score / totalScore) * 100);
-            let grade = getGradeInfo(pct);
-            labels.push(mName);
-            percentages.push(pct);
-            barColors.push(grade.color);
-
-            tableRowsHtml += `<tr>
-                <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;"><b>${mName}</b></td>
-                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">${formatDateTime(rec.timestamp)}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:var(--accent); font-weight:bold;">${rec.score} من ${totalScore}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;"><span style="color:${grade.color}; padding:3px 8px; background:${grade.bg}; border-radius:12px;">${pct}% (${grade.text})</span></td>
-            </tr>`;
-        });
-
-        document.querySelector("#student-models-table tbody").innerHTML = tableRowsHtml;
-        document.getElementById('student-report-modal').style.display = 'flex';
-    }
-
-    function updateRankings(students) {
-        students.sort((a, b) => b.percentage - a.percentage);
-        const top5List = document.getElementById('top5List');
-        top5List.innerHTML = "";
-        students.slice(0, 5).forEach(st => {
-            top5List.innerHTML += `<li><b>${st.name}</b> <span style="color:#15803d; font-weight:bold;">(${st.score}/${st.total})</span></li>`;
-        });
-
-        const bottom5List = document.getElementById('bottom5List');
-        bottom5List.innerHTML = "";
-        students.slice(-5).reverse().forEach(st => {
-            bottom5List.innerHTML += `<li><b>${st.name}</b> <span style="color:#b91c1c; font-weight:bold;">(${st.score}/${st.total})</span></li>`;
-        });
-    }
-
-    async function openReview(docId) {
-        const snap = await database.ref("quran_results/" + docId).once('value');
-        const data = snap.val();
-        document.getElementById('review-student-name').innerText = `مراجعة إجابات الطالب: ${data.name}`;
-        const listContainer = document.getElementById('review-list');
-        listContainer.innerHTML = "";
-
-        if (data.answers && data.answers.length > 0) {
-            data.answers.forEach((ans, index) => {
-                listContainer.innerHTML += `<div class="answer-card ${ans.isCorrect ? 'ans-correct' : 'ans-wrong'}">
-                    <strong>س ${index + 1}: ${ans.qText}</strong><br>
-                    <span>إجابة الطالب: ${ans.studentAns}${ans.isCorrect ? '✅' : '❌'}</span><br>
-                    ${!ans.isCorrect ? `<span>الإجابة الصحيحة: ${ans.correctAns}</span>` : ''}
-                </div>`;
-            });
-        } else {
-            listContainer.innerHTML = "<p style='text-align:center;'>لا توجد تفاصيل إجابات محفوظة.</p>";
-        }
-        document.getElementById('review-modal').style.display = 'flex';
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -528,7 +353,6 @@
         selectedModel = m; 
         const actionArea = document.getElementById('action-area');
         const subTitle = document.getElementById('sub-title');
-
         if (m === 'all') {
             subTitle.innerText = "القرآن الكريم وعلومه";
             actionArea.innerHTML = `<button class="btn-share" onclick="generateShareLink('all')">🔗 مشاركة اللوحة</button><button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
@@ -558,11 +382,7 @@
         document.getElementById('qr-modal').style.display = 'flex';
     }
 
-    function copyLink() { 
-        document.getElementById('share-url').select(); 
-        document.execCommand("copy"); 
-        alert("تم نسخ رابط المشاركة"); 
-    }
+    function copyLink() { document.getElementById('share-url').select(); document.execCommand("copy"); alert("تم النسخ"); }
 
     function updateSummary(s, l) {
         document.getElementById('count').innerText = s.length;
