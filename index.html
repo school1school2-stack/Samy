@@ -2,250 +2,407 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة التحكم الشاملة - د. سامي بن محمد العمر</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحليل الذكي ومتابعة الاختبارات - د. سامي بن محمد العمر</title>
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Chart.js للرسوم البيانية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --royal-blue: #1e3a8a; --gold: #d4af37; --bg: #fdfaf1; --danger: #c62828; --success: #28a745; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); padding: 20px; }
-        .admin-card { background: white; max-width: 1000px; margin: auto; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border-top: 8px solid var(--royal-blue); }
-        .header { text-align: center; border-bottom: 2px solid var(--gold); margin-bottom: 20px; padding-bottom: 10px; }
-        .bulk-section { background: #f4f4f4; padding: 20px; border-radius: 10px; margin-bottom: 25px; border: 1px dashed var(--royal-blue); }
-        textarea { width: 100%; height: 150px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: sans-serif; resize: vertical; box-sizing: border-box; }
-        .controls { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-upload { background: var(--royal-blue); color: white; }
-        .btn-delete-all { background: var(--danger); color: white; }
-        
-        .pending-section { background: #fff8e1; border: 2px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 25px; display: none; }
-        .pending-section h3 { color: #d32f2f; margin-top: 0; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-        th { background: var(--royal-blue); color: white; padding: 12px; }
-        td { border-bottom: 1px solid #eee; padding: 10px; text-align: center; }
-        
-        .btn-approve { background: var(--success); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-reject { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        
-        .stats-bar { display: flex; justify-content: space-between; background: #e9ecef; padding: 15px; border-radius: 8px; font-weight: bold; color: var(--royal-blue); font-size: 1.1rem; margin-bottom: 15px; }
-        .search-container { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 10px; }
-        .search-container h3 { margin: 0; }
-        .search-box { padding: 10px 15px; width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; outline: none; transition: 0.3s; }
-        .search-box:focus { border-color: var(--royal-blue); box-shadow: 0 0 5px rgba(30,58,138,0.2); }
+        :root {
+            --royal-blue: #1e3a8a;
+            --gold: #d4af37;
+            --bg-color: #fdfaf1;
+            --card-bg: #ffffff;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-top: 6px solid var(--royal-blue);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: var(--royal-blue);
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+        }
+
+        .header p {
+            margin: 0;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-right: 5px solid var(--royal-blue);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--royal-blue);
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-card h3 {
+            margin-top: 0;
+            color: var(--royal-blue);
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+        }
+
+        .table-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .table-card h3 {
+            margin-top: 0;
+            color: var(--royal-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--royal-blue);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .badge-success { background-color: var(--success); }
+        .badge-warning { background-color: var(--warning); color: #333; }
+        .badge-danger { background-color: var(--danger); }
+
+        .btn-export {
+            background: var(--royal-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-export:hover {
+            background: #152860;
+        }
+
+        .search-box {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 250px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
 
-<div class="admin-card">
+<div class="dashboard-container">
     <div class="header">
-        <h2>لوحة إدارة الطلاب والمُصرح لهم بالاختبار 🔒</h2>
-        <p>د. سامي بن محمد العمر - القرآن الكريم تفسيره وعلومه</p>
+        <h1>📊 لوحة المتابعة والتحليل الذكي للاختبارات</h1>
+        <p>مادة: القرآن الكريم تفسيره وعلومه - د. سامي بن محمد العمر</p>
     </div>
 
-    <!-- قسم الطلبات المعلقة -->
-    <div class="pending-section" id="pendingSection">
-        <h3>🔔 طلبات تسجيل جديدة بانتظار المراجعة</h3>
-        <table id="pendingTable">
-            <thead>
-                <tr>
-                    <th>الاسم</th>
-                    <th>البريد الإلكتروني</th>
-                    <th>الإجراء</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- قسم الرفع الجماعي -->
-    <div class="bulk-section">
-        <label><strong>لصق القائمة هنا (اسم الطالب وإيميله في أسطر متتالية):</strong></label>
-        <textarea id="bulkInput" placeholder="الصق القائمة هنا..."></textarea>
-        <div class="controls">
-            <button class="btn btn-upload" onclick="superSmartBulkAdd()">بدء المعالجة والرفع 🚀</button>
-            <button class="btn btn-delete-all" onclick="deleteAllStudents()">حذف الكل (المعتمدين) 🗑️</button>
+    <!-- البطاقات الإحصائية -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>إجمالي الطلاب الخاضعين للاختبار</h3>
+            <div class="value" id="totalStudents">0</div>
+        </div>
+        <div class="stat-card">
+            <h3>متوسط الدرجات العامة</h3>
+            <div class="value" id="avgScore">0%</div>
+        </div>
+        <div class="stat-card">
+            <h3>أعلى درجة محققة</h3>
+            <div class="value" id="maxScore">0</div>
+        </div>
+        <div class="stat-card">
+            <h3>نسبة النجاح (≥60%)</h3>
+            <div class="value" id="passRate">0%</div>
         </div>
     </div>
 
-    <!-- شريط الإحصائيات -->
-    <div class="stats-bar">
-        <span id="approvedCount">الطلاب المعتمدين: 0</span>
-        <span id="pendingCountBadge" style="color: #d32f2f;">الطلبات المعلقة: 0</span>
+    <!-- المخططات البيانية -->
+    <div class="charts-section">
+        <div class="chart-card">
+            <h3>📈 توزيع التقديرات والدرجات</h3>
+            <canvas id="gradesChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3>🎯 نسبة الإجابات الصحيحة بكل سؤال</h3>
+            <canvas id="questionsChart"></canvas>
+        </div>
     </div>
 
-    <!-- البحث -->
-    <div class="search-container">
-        <h3>🎓 قائمة الطلاب المعتمدين</h3>
-        <input type="text" id="searchInput" class="search-box" onkeyup="searchStudents()" placeholder="🔍 ابحث عن اسم الطالب أو إيميله...">
+    <!-- جدول النتائج -->
+    <div class="table-card">
+        <h3>
+            <span>📋 قائمة نتائج الطلاب تفصيلياً</span>
+            <input type="text" id="searchInput" class="search-box" onkeyup="filterResults()" placeholder="🔍 ابحث باسم الطالب أو بريده...">
+        </h3>
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>اسم الطالب</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الدرجة</th>
+                    <th>النسبة المئوية</th>
+                    <th>تاريخ ووقت التسليم</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- يتم تعبئتها بواسطة البرمجية -->
+            </tbody>
+        </table>
     </div>
-
-    <table id="studentsTable">
-        <thead>
-            <tr>
-                <th>الاسم</th>
-                <th>البريد الإلكتروني</th>
-                <th>الإجراء</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
 </div>
 
 <script>
-    // ربط بسحابة د. سامي العمر
+    // إعدادات Firebase الخاصة بسحابة د. سامي العمر
     const firebaseConfig = {
         apiKey: "AIzaSyAJKKo_NfmOMA0955ulSRDnwQvfHLeIz_s",
         authDomain: "samy-28452.firebaseapp.com",
+        databaseURL: "https://samy-28452-default-rtdb.firebaseio.com",
         projectId: "samy-28452",
         storageBucket: "samy-28452.firebasestorage.app",
         messagingSenderId: "248617107030",
         appId: "1:248617107030:web:1a884c43c2461e24c945f7"
     };
+
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const rtdb = firebase.database();
 
-    function fetchStudents() {
-        const approvedTbody = document.querySelector("#studentsTable tbody");
-        const pendingTbody = document.querySelector("#pendingTable tbody");
-        const pendingSection = document.getElementById("pendingSection");
+    let gradesChartObj = null;
+    let questionsChartObj = null;
 
-        db.collection("allowed_students").orderBy("name").onSnapshot((snapshot) => {
-            let approvedCount = snapshot.size;
-            approvedTbody.innerHTML = "";
-            document.getElementById("approvedCount").innerText = `الطلاب المعتمدين: ${approvedCount}`;
-
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                const email = doc.id;
-                approvedTbody.innerHTML += `
-                    <tr>
-                        <td>${data.name}</td>
-                        <td>${email}</td>
-                        <td><button class="btn-reject" onclick="deleteAllowed('${email}')">🗑️ حذف</button></td>
-                    </tr>`;
-            });
-            searchStudents();
-        });
-
-        db.collection("pending_students").orderBy("name").onSnapshot((snapshot) => {
-            let pendingCount = snapshot.size;
-            pendingTbody.innerHTML = "";
-            document.getElementById("pendingCountBadge").innerText = `الطلبات المعلقة: ${pendingCount}`;
-            pendingSection.style.display = pendingCount > 0 ? "block" : "none";
-
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                const email = doc.id;
-                pendingTbody.innerHTML += `
-                    <tr>
-                        <td>${data.name}</td>
-                        <td>${email}</td>
-                        <td>
-                            <button class="btn-approve" onclick="approveStudent('${email}', '${data.name}')">✅ قبول</button>
-                            <button class="btn-reject" onclick="deletePending('${email}')">❌ رفض</button>
-                        </td>
-                    </tr>`;
-            });
-        });
-    }
-
-    async function approveStudent(email, name) {
-        try {
-            await db.collection("allowed_students").doc(email).set({
-                name: name,
-                added_at: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            await db.collection("pending_students").doc(email).delete();
-        } catch (error) {
-            alert("حدث خطأ أثناء الموافقة.");
-        }
-    }
-
-    async function deletePending(email) {
-        if(confirm(`رفض وحذف ${email} من قائمة الانتظار؟`)) {
-            await db.collection("pending_students").doc(email).delete();
-        }
-    }
-
-    async function deleteAllowed(email) {
-        if(confirm(`حذف ${email} من الطلاب المعتمدين؟`)) {
-            await db.collection("allowed_students").doc(email).delete();
-        }
-    }
-
-    async function superSmartBulkAdd() {
-        const input = document.getElementById("bulkInput").value.trim();
-        if(!input) return alert("يرجى لصق البيانات");
-
-        const lines = input.split('\n').map(l => l.trim()).filter(l => l !== "");
-        const batch = db.batch();
-        let count = 0;
-
-        for(let i = 0; i < lines.length; i++) {
-            let line1 = lines[i];
-            let line2 = lines[i+1];
-
-            if(!line2) break;
-
-            let name = "", email = "";
-
-            if(!line1.includes('@') && line2.includes('@')) {
-                name = line1; email = line2.toLowerCase();
-                i++;
-            } else if(line1.includes('@') && !line2.includes('@')) {
-                email = line1.toLowerCase(); name = line2;
-                i++;
-            }
-
-            if(name && email) {
-                const ref = db.collection("allowed_students").doc(email);
-                batch.set(ref, { name: name, added_at: firebase.firestore.FieldValue.serverTimestamp() });
-                count++;
-            }
-        }
-
-        if(count > 0) {
-            await batch.commit();
-            alert(`تم رفع واعتماد ${count} طالب بنجاح!`);
-            document.getElementById("bulkInput").value = "";
+    // استمع للبيانات المباشرة من Realtime Database
+    rtdb.ref('results').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            processDashboardData(Object.values(data));
         } else {
-            alert("تنسيق غير معروف. تأكد من وجود الاسم والإيميل في سطرين متتاليين.");
+            resetDashboard();
         }
+    });
+
+    function processDashboardData(results) {
+        const total = results.length;
+        let sumScore = 0;
+        let maxScore = 0;
+        let passCount = 0;
+
+        let gradeCategories = { 'ممتاز (90-100%)': 0, 'جيد جداً (80-89%)': 0, 'جيد (70-79%)': 0, 'مقبول (60-69%)': 0, 'ضعيف (<60%)': 0 };
+        let questionStats = { q1: 0, q2: 0, q3: 0, q4: 0 };
+
+        const tbody = document.querySelector("#resultsTable tbody");
+        tbody.innerHTML = "";
+
+        results.forEach(res => {
+            sumScore += res.percentage;
+            if (res.score > maxScore) maxScore = res.score;
+            if (res.percentage >= 60) passCount++;
+
+            // التقدير
+            if (res.percentage >= 90) gradeCategories['ممتاز (90-100%)']++;
+            else if (res.percentage >= 80) gradeCategories['جيد جداً (80-89%)']++;
+            else if (res.percentage >= 70) gradeCategories['جيد (70-79%)']++;
+            else if (res.percentage >= 60) gradeCategories['مقبول (60-69%)']++;
+            else gradeCategories['ضعيف (<60%)']++;
+
+            // إحصاء الإجابات الصحيحة لكل سؤال
+            if (res.answers) {
+                if (res.answers.q1 === 1) questionStats.q1++;
+                if (res.answers.q2 === 1) questionStats.q2++;
+                if (res.answers.q3 === 0) questionStats.q3++;
+                if (res.answers.q4 === 1) questionStats.q4++;
+            }
+
+            // إضافة للجدول
+            const formattedDate = res.submittedAt ? new Date(res.submittedAt).toLocaleString('ar-SA') : '-';
+            const badgeClass = res.percentage >= 60 ? 'badge-success' : 'badge-danger';
+            const statusText = res.percentage >= 60 ? 'ناجح' : 'راسب';
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${res.name || 'غير معروف'}</strong></td>
+                    <td>${res.email || '-'}</td>
+                    <td>${res.score} / ${res.total}</td>
+                    <td>${res.percentage}%</td>
+                    <td>${formattedDate}</td>
+                    <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                </tr>
+            `;
+        });
+
+        // تحديث أرقام الإحصائيات
+        document.getElementById("totalStudents").innerText = total;
+        document.getElementById("avgScore").innerText = Math.round(sumScore / total) + "%";
+        document.getElementById("maxScore").innerText = maxScore;
+        document.getElementById("passRate").innerText = Math.round((passCount / total) * 100) + "%";
+
+        // رسم المخططات البيانية
+        renderGradesChart(gradeCategories);
+        renderQuestionsChart(questionStats, total);
     }
 
-    async function deleteAllStudents() {
-        if(!confirm("تحذير: هل أنت متأكد من مسح جميع الطلاب المعتمدين؟")) return;
-        const snapshot = await db.collection("allowed_students").get();
-        const batch = db.batch();
-        snapshot.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
-        alert("تمت تصفية قائمة المعتمدين.");
-    }
+    function renderGradesChart(categories) {
+        const ctx = document.getElementById('gradesChart').getContext('2d');
+        if (gradesChartObj) gradesChartObj.destroy();
 
-    function searchStudents() {
-        let input = document.getElementById("searchInput");
-        let filter = input.value.toUpperCase();
-        let table = document.getElementById("studentsTable");
-        let tr = table.getElementsByTagName("tr");
-
-        for (let i = 1; i < tr.length; i++) {
-            let tdName = tr[i].getElementsByTagName("td")[0];
-            let tdEmail = tr[i].getElementsByTagName("td")[1];
-            
-            if (tdName || tdEmail) {
-                let txtValueName = tdName.textContent || tdName.innerText;
-                let txtValueEmail = tdEmail.textContent || tdEmail.innerText;
-                
-                if (txtValueName.toUpperCase().indexOf(filter) > -1 || txtValueEmail.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
+        gradesChartObj = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(categories),
+                datasets: [{
+                    data: Object.values(categories),
+                    backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#fd7e14', '#dc3545']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
                 }
-            }       
-        }
+            }
+        });
     }
 
-    fetchStudents();
+    function renderQuestionsChart(qStats, totalStudents) {
+        const ctx = document.getElementById('questionsChart').getContext('2d');
+        if (questionsChartObj) questionsChartObj.destroy();
+
+        const percentages = [
+            Math.round((qStats.q1 / totalStudents) * 100),
+            Math.round((qStats.q2 / totalStudents) * 100),
+            Math.round((qStats.q3 / totalStudents) * 100),
+            Math.round((qStats.q4 / totalStudents) * 100)
+        ];
+
+        questionsChartObj = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['سؤال 1', 'سؤال 2', 'سؤال 3', 'سؤال 4'],
+                datasets: [{
+                    label: 'نسبة الإجابة الصحيحة (%)',
+                    data: percentages,
+                    backgroundColor: '#1e3a8a'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+    }
+
+    function filterResults() {
+        const input = document.getElementById("searchInput").value.toUpperCase();
+        const trs = document.querySelectorAll("#resultsTable tbody tr");
+
+        trs.forEach(tr => {
+            const name = tr.children[0].textContent.toUpperCase();
+            const email = tr.children[1].textContent.toUpperCase();
+            if (name.includes(input) || email.includes(input)) {
+                tr.style.display = "";
+            } else {
+                tr.style.display = "none";
+            }
+        });
+    }
+
+    function resetDashboard() {
+        document.getElementById("totalStudents").innerText = "0";
+        document.getElementById("avgScore").innerText = "0%";
+        document.getElementById("maxScore").innerText = "0";
+        document.getElementById("passRate").innerText = "0%";
+        document.querySelector("#resultsTable tbody").innerHTML = `<tr><td colspan="6">لا توجد نتائج مسجلة حتى الآن</td></tr>`;
+    }
 </script>
 </body>
 </html>
