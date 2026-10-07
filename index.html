@@ -5,6 +5,7 @@
     <title>منصة د / سامي محمد العمر ( التحليل الذكي ) - القرآن الكريم وعلومه 😉</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -263,9 +264,9 @@
 </div>
 
 <script>
-    // إعدادات Firebase المستخرجة بدقة من صورة الإعدادات الخاصة بزميلك
+    // إعدادات سحابة الدكتور سامي الخاصة بمشروعه المستقل
     const firebaseConfig = {
-      apiKey: "AIzaSyAJKKo_NfmOMA0955ulSRDnwQvfHLeIz_s",
+      apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
       authDomain: "samy-28452.firebaseapp.com",
       databaseURL: "https://samy-28452-default-rtdb.firebaseio.com",
       projectId: "samy-28452",
@@ -722,7 +723,15 @@
 
     async function deleteDoc(id) { 
         if(isViewOnly) return;
-        if(confirm("حذف الطالب؟")) await database.ref("quran_results/" + id).remove(); 
+        if(confirm("هل أنت متأكد من حذف الطالب نهائياً من السجل؟")) {
+            try {
+                await database.ref("quran_results/" + id).remove();
+                alert("تم حذف الطالب بنجاح من اللوحة والسحابة.");
+            } catch (error) {
+                console.error("خطأ أثناء الحذف: ", error);
+                alert("حدث خطأ أثناء محاولة حذف الطالب.");
+            }
+        }
     }
 
     function drawCharts(lv, skills) {
