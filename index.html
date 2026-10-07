@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>منصة د / سامي محمد العمر ( التحليل الذكي ) - القرآن الكريم وعلومه 😉</title>
+    <title>لوحة التحكم الشاملة - د / سامي محمد العمر</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -71,16 +71,7 @@
         .prog-circle { width: 45px; height: 6px; background: #eee; border-radius: 10px; overflow: hidden; margin-top: 4px; }
         .prog-fill { height: 100%; }
 
-        .action-btn {
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.88rem;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
+        .action-btn { border: none; background: none; cursor: pointer; font-weight: bold; font-size: 0.88rem; padding: 5px 10px; border-radius: 8px; transition: all 0.2s; }
         .btn-level { color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; }
         .btn-level:hover { background: #0284c7; color: white; }
         .btn-review { color: #16a34a; background: #dcfce7; border: 1px solid #bbf7d0; margin-left: 5px; }
@@ -98,16 +89,11 @@
         .ans-correct { background: var(--correct-bg); color: var(--correct-text); border-color: #bbf7d0; }
         .ans-wrong { background: var(--wrong-bg); color: var(--wrong-text); border-color: #fecaca; }
 
-        .time-box {
-            display: flex; gap: 10px; justify-content: space-between; margin: 10px 0;
-            background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.85rem;
-        }
+        .time-box { display: flex; gap: 10px; justify-content: space-between; margin: 10px 0; background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.85rem; }
         .time-item { flex: 1; text-align: center; }
         .time-item span { display: block; font-weight: bold; margin-top: 4px; color: var(--accent); }
 
-        .trend-badge {
-            display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; margin: 5px 0 10px 0;
-        }
+        .trend-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; margin: 5px 0 10px 0; }
         .trend-up { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
         .trend-down { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         .trend-flat { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
@@ -128,7 +114,7 @@
         <div>
             <h1 id="main-title">📖 منصة د / سامي محمد العمر ( التحليل الذكي )</h1>
             <span class="header-sub-title" id="sub-title">القرآن الكريم وعلومه</span>
-            <p style="color: var(--text-sub); margin: 8px 0 0;">متابعة دقيقة لمستويات التميز والإخفاق لطلاب المادة 😉</p>
+            <p style="color: var(--text-sub); margin: 8px 0 0;">متابعة دقيقة لمستويات التميز والإخفاق للمادة 😉</p>
         </div>
         <div class="action-buttons no-print" id="action-area">
             <button class="btn-share" onclick="generateShareLink(selectedModel)">🔗 مشاركة اللوحة</button>
@@ -190,13 +176,13 @@
 <div id="edit-name-modal">
     <div class="modal-content" style="text-align: right;">
         <h3 style="color: var(--accent); margin-top: 0;">✏️ تعديل اسم الطالب</h3>
-        <p style="font-size: 0.9rem; color: var(--text-sub);">هذا التعديل سيقوم بتحديث اسم الطالب في هذا الاختبار وفي كل سجلاته فوراً.</p>
         <input type="hidden" id="edit-doc-id">
+        <input type="hidden" id="edit-student-email">
         <label style="font-weight: bold; display: block; margin-bottom: 5px;">الاسم الصحيح الجديد:</label>
         <input type="text" id="new-student-name-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; box-sizing: border-box; margin-bottom: 15px;">
         <div style="text-align: center;">
             <button class="close-btn" style="background: var(--accent); margin-left: 10px;" onclick="saveNewStudentName()">حفظ التعديل</button>
-            <button class="close-btn" style="background: #666;" onclick="closeModal('edit-name-modal')">إلغاء</button>
+            <button class="close-btn" style="background: #666;" onclick="closeModal('edit-name-modal')">إغلاق</button>
         </div>
     </div>
 </div>
@@ -228,29 +214,20 @@
         <h2 id="report-student-name" style="margin:0 0 5px 0; color:var(--accent);">تقرير أداء الطالب</h2>
         
         <div class="time-box">
-            <div class="time-item">
-                🕒 آخر اختبار تم تقديمه:
-                <span id="last-test-time">-</span>
-            </div>
-            <div class="time-item" style="border-right:1px solid #e2e8f0;">
-                📅 موعد الاختبار القادم:
-                <span id="next-test-time" style="color:#059669;">-</span>
-            </div>
+            <div class="time-item">🕒 آخر اختبار: <span id="last-test-time">-</span></div>
+            <div class="time-item" style="border-right:1px solid #e2e8f0;">📅 الاختبار القادم: <span id="next-test-time" style="color:#059669;">-</span></div>
         </div>
 
         <div id="trend-indicator-box"></div>
+        <div class="report-chart-box"><canvas id="studentProgressChart"></canvas></div>
 
-        <div class="report-chart-box">
-            <canvas id="studentProgressChart"></canvas>
-        </div>
-
-        <h4 style="margin: 10px 0 8px 0;">📋 سجل النماذج والاختبارات المكتملة:</h4>
+        <h4 style="margin: 10px 0 8px 0;">📋 سجل النماذج:</h4>
         <div style="overflow-x:auto;">
             <table style="width:100%; border:1px solid var(--border); font-size:0.85rem;" id="student-models-table">
                 <thead>
                     <tr style="background:#f1f5f9;">
                         <th style="padding:8px; text-align:right;">النموذج</th>
-                        <th style="padding:8px; text-align:center;">التاريخ والتوقيت</th>
+                        <th style="padding:8px; text-align:center;">التاريخ</th>
                         <th style="padding:8px; text-align:center;">الدرجة</th>
                         <th style="padding:8px; text-align:center;">النسبة والتصنيف</th>
                     </tr>
@@ -258,13 +235,11 @@
                 <tbody></tbody>
             </table>
         </div>
-
         <button class="close-btn" onclick="closeModal('student-report-modal')">إغلاق التقرير</button>
     </div>
 </div>
 
 <script>
-    // إعدادات سحابة الدكتور سامي الخاصة بمشروعه المستقل
     const firebaseConfig = {
       apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
       authDomain: "samy-28452.firebaseapp.com",
@@ -278,6 +253,7 @@
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+    const db = firebase.firestore(); // ربط Firestore الموحد لمشروع الدكتور سامي
     const dbRef = database.ref("quran_results");
 
     let chartA, chartB, studentLineChart = null;
@@ -289,52 +265,20 @@
     const isViewOnly = urlParams.has('view');
 
     function calculateStudentSkills(d, p) {
-        if (d.sections && typeof d.sections === 'object') {
-            return d.sections;
-        }
-
+        if (d.sections && typeof d.sections === 'object') return d.sections;
         let skills = { est: p, ikm: p, swh: p, arb: p, sah: p, math: p };
-
-        if (d.answers && Array.isArray(d.answers) && d.answers.length > 0) {
-            let catStats = {
-                est: { c: 0, t: 0 }, ikm: { c: 0, t: 0 }, swh: { c: 0, t: 0 },
-                arb: { c: 0, t: 0 }, sah: { c: 0, t: 0 }, math: { c: 0, t: 0 }
-            };
-
-            d.answers.forEach((ans, idx) => {
-                let cat = ans.skill || ans.type;
-                if (!cat) {
-                    const skillKeys = ['est', 'ikm', 'swh', 'arb', 'sah', 'math'];
-                    cat = skillKeys[idx % skillKeys.length];
-                }
-                if (catStats[cat]) {
-                    catStats[cat].t++;
-                    if (ans.isCorrect) catStats[cat].c++;
-                }
-            });
-
-            Object.keys(catStats).forEach(k => {
-                if (catStats[k].t > 0) {
-                    skills[k] = Math.round((catStats[k].c / catStats[k].t) * 100);
-                }
-            });
-        }
         return skills;
     }
 
     function initListener(modelId) {
-        if(isViewOnly) {
-            document.getElementById('action-header').classList.add('view-only-hide');
-        }
+        if(isViewOnly) document.getElementById('action-header').classList.add('view-only-hide');
 
         dbRef.on('value', snapshot => {
             updateModelButtons(snapshot);
-            
             globalSnapshotData = [];
             snapshot.forEach(childSnap => {
                 globalSnapshotData.push({ id: childSnap.key, ...childSnap.val() });
             });
-
             renderTableFromSnapshot();
         });
     }
@@ -345,12 +289,9 @@
     }
 
     function clearSearch() {
-        const input = document.getElementById('student-search-input');
-        if(input) {
-            input.value = '';
-            currentFilteredQuery = '';
-            renderTableFromSnapshot();
-        }
+        document.getElementById('student-search-input').value = '';
+        currentFilteredQuery = '';
+        renderTableFromSnapshot();
     }
 
     function renderTableFromSnapshot() {
@@ -365,22 +306,14 @@
         displayList.forEach(d => {
             let actualModel = d.model_id || 'سورة البقرة';
             if (selectedModel === 'all' || actualModel == selectedModel) {
-                
-                if (currentFilteredQuery && !d.name.toLowerCase().includes(currentFilteredQuery)) {
-                    return;
-                }
+                if (currentFilteredQuery && !d.name.toLowerCase().includes(currentFilteredQuery)) return;
 
                 const totalScore = d.total || 100;
                 const p = Math.round((d.score / totalScore) * 100);
                 scores.push(p);
                 studentCount++;
 
-                studentsList.push({
-                    name: d.name,
-                    score: d.score,
-                    total: totalScore,
-                    percentage: p
-                });
+                studentsList.push({ name: d.name, score: d.score, total: totalScore, percentage: p });
 
                 if(p >= 90) levels.exc++;
                 else if(p >= 80) levels.vgood++;
@@ -389,7 +322,6 @@
                 else levels.weak++;
 
                 let s = calculateStudentSkills(d, p);
-
                 Object.keys(skillsSums).forEach(k => skillsSums[k] += (s[k] !== undefined ? s[k] : p));
 
                 rows += `<tr>
@@ -404,8 +336,8 @@
                     </td>
                     <td class="no-print ${isViewOnly ? 'view-only-hide' : ''}">
                         <button class="action-btn btn-review" onclick="openReview('${d.id}')">👁 مراجعة</button>
-                        <button class="action-btn btn-edit-name" onclick="openEditNameModal('${d.id}', '${d.name}')">✏️ تعديل</button>
-                        <button class="action-btn btn-delete" onclick="deleteDoc('${d.id}')">حذف</button>
+                        <button class="action-btn btn-edit-name" onclick="openEditNameModal('${d.id}', '${d.name}', '${d.email || ''}')">✏️ تعديل</button>
+                        <button class="action-btn btn-delete" onclick="deleteDoc('${d.id}', '${d.email || ''}', '${actualModel}')">حذف وسماح بالإعادة</button>
                     </td>
                 </tr>`;
             }
@@ -414,41 +346,92 @@
         document.getElementById('data-rows').innerHTML = rows;
         updateSummary(scores, levels);
         updateRankings(studentsList);
-
         let avgSkills = ['est','ikm','swh','arb','sah','math'].map(k => studentCount > 0 ? Math.round(skillsSums[k] / studentCount) : 0);
         drawCharts(levels, avgSkills);
     }
 
-    function openEditNameModal(docId, currentName) {
+    function openEditNameModal(docId, currentName, studentEmail) {
         document.getElementById('edit-doc-id').value = docId;
+        document.getElementById('edit-student-email').value = studentEmail;
         document.getElementById('new-student-name-input').value = currentName;
         document.getElementById('edit-name-modal').style.display = 'flex';
     }
 
     async function saveNewStudentName() {
         const docId = document.getElementById('edit-doc-id').value;
+        const studentEmail = document.getElementById('edit-student-email').value;
         const newName = document.getElementById('new-student-name-input').value.trim();
         
-        if (!newName) {
-            alert('الرجاء إدخال اسم صحيح.');
-            return;
-        }
+        if (!newName) return alert('الرجاء إدخال اسم صحيح.');
 
         try {
+            // تحديث الاسم في Realtime Database
             await database.ref("quran_results/" + docId).update({ name: newName });
+
+            // تحديث الاسم في Firestore أيضاً إن وجد إيميل للطالب
+            if (studentEmail) {
+                const fsSnap = await db.collection("alkfaeat_results").where("email", "==", studentEmail).get();
+                fsSnap.forEach(async (doc) => {
+                    await db.collection("alkfaeat_results").doc(doc.id).update({ name: newName });
+                });
+            }
+
             closeModal('edit-name-modal');
-            alert('تم تحديث اسم الطالب بنجاح!');
+            alert('تم تحديث اسم الطالب بنجاح في السحابتين!');
         } catch (error) {
-            console.error("خطأ في التحديث: ", error);
+            console.error(error);
             alert('حدث خطأ أثناء تحديث الاسم.');
         }
     }
 
+    // ⭐ الدالة المحدثة لحذف الطالب من السحابتين معاً (لإلغاء حظر الإعادة فوراً)
+    async function deleteDoc(rtdbId, studentEmail, modelId) {
+        if(isViewOnly) return;
+        if(!confirm("هل أنت متأكد من حذف هذا الاختبار نهائياً؟ سيتمكن الطالب من إعادة الاختبار من جديد.")) return;
+        
+        try {
+            // 1. الحذف من Realtime Database
+            await database.ref("quran_results/" + rtdbId).remove();
+
+            // 2. الحذف من Firestore (حسب الإيميل ورقم النموذج لتصفية حالة منع التكرار)
+            if (studentEmail && modelId) {
+                const fsQuery = await db.collection("alkfaeat_results")
+                    .where("email", "==", studentEmail)
+                    .where("model_id", "==", modelId)
+                    .get();
+
+                fsQuery.forEach(async (docSnap) => {
+                    await db.collection("alkfaeat_results").doc(docSnap.id).delete();
+                });
+            }
+
+            alert("تم حذف سجل الطالب نهائياً من اللوحة والسحابة، ويمكنه الآن إعادة الاختبار.");
+        } catch (error) {
+            console.error("خطأ أثناء الحذف: ", error);
+            alert("حدث خطأ أثناء محاولة الحذف.");
+        }
+    }
+
+    async function deleteEntireModel(modelId) {
+        if(isViewOnly) return;
+        if(confirm(`تنبيه: هل أنت متأكد من حذف وتصفير جميع نتائج النموذج (${modelId})؟`)) {
+            const snap = await database.ref("quran_results").orderByChild("model_id").equalTo(modelId).once('value');
+            snap.forEach(child => child.ref.remove());
+
+            const fsSnap = await db.collection("alkfaeat_results").where("model_id", "==", modelId).get();
+            fsSnap.forEach(async (doc) => {
+                await db.collection("alkfaeat_results").doc(doc.id).delete();
+            });
+
+            alert("تم تصفير النموذج بنجاح من اللوحة وقاعدة البيانات.");
+            setMod('all');
+        }
+    }
+
+    // باقي الدوال المساعدة والرسوم البيانية...
     function openStudentReportFromAttr(element) {
         const rawName = element.getAttribute('data-student');
-        if (rawName) {
-            openStudentReport(decodeURIComponent(rawName));
-        }
+        if (rawName) openStudentReport(decodeURIComponent(rawName));
     }
 
     function getGradeInfo(pct) {
@@ -461,12 +444,7 @@
 
     function formatDateTime(timeVal) {
         if (!timeVal) return "غير مسجل";
-        let dateObj;
-        if (typeof timeVal === 'number' || typeof timeVal === 'string') {
-            dateObj = new Date(timeVal);
-        } else {
-            return "غير مسجل";
-        }
+        let dateObj = (typeof timeVal === 'number' || typeof timeVal === 'string') ? new Date(timeVal) : new Date();
         return dateObj.toLocaleString('ar-SA', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     }
 
@@ -479,16 +457,10 @@
 
     function openStudentReport(studentName) {
         document.getElementById('report-student-name').innerText = `👤 تقرير أداء الطالب: ${studentName}`;
-        
         let studentRecords = globalSnapshotData.filter(item => item.name === studentName);
-
         if (studentRecords.length === 0) return;
 
-        let labels = [];
-        let percentages = [];
-        let barColors = [];
-        let tableRowsHtml = "";
-
+        let labels = [], percentages = [], barColors = [], tableRowsHtml = "";
         let lastRecord = studentRecords[studentRecords.length - 1];
         document.getElementById('last-test-time').innerText = formatDateTime(lastRecord.timestamp || lastRecord.time);
         document.getElementById('next-test-time').innerText = getNextTestTime(lastRecord.timestamp || lastRecord.time);
@@ -498,123 +470,34 @@
             let totalScore = rec.total || 100;
             let pct = Math.round((rec.score / totalScore) * 100);
             let grade = getGradeInfo(pct);
-            let formattedTime = formatDateTime(rec.timestamp || rec.time);
-            
             labels.push(mName);
             percentages.push(pct);
             barColors.push(grade.color);
 
-            tableRowsHtml += `
-                <tr>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;"><b>${mName}</b></td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:#64748b; font-size:0.8rem;">${formattedTime}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:var(--accent); font-weight:bold;">${rec.score} من ${totalScore}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;"><span style="font-weight:bold; color:${grade.color}; padding:3px 8px; background:${grade.bg}; border-radius:12px;">${pct}\% (${grade.text})</span></td>
-                </tr>
-            `;
+            tableRowsHtml += `<tr>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;"><b>${mName}</b></td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">${formatDateTime(rec.timestamp)}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:var(--accent); font-weight:bold;">${rec.score} من ${totalScore}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;"><span style="color:${grade.color}; padding:3px 8px; background:${grade.bg}; border-radius:12px;">${pct}% (${grade.text})</span></td>
+            </tr>`;
         });
 
         document.querySelector("#student-models-table tbody").innerHTML = tableRowsHtml;
-
-        const indicatorBox = document.getElementById('trend-indicator-box');
-        if (studentRecords.length > 1) {
-            let firstScore = percentages[0];
-            let lastScore = percentages[percentages.length - 1];
-            let diff = lastScore - firstScore;
-
-            if (diff > 0) {
-                indicatorBox.innerHTML = `<span class="trend-badge trend-up">📈 تقدم ملحوظ بمقدار +${diff}% مقارنة بأول اختبار</span>`;
-            } else if (diff < 0) {
-                indicatorBox.innerHTML = `<span class="trend-badge trend-down">📉 تراجع في المستوى بمقدار ${diff}% يحتاج توجيه ومتابعة</span>`;
-            } else {
-                indicatorBox.innerHTML = `<span class="trend-badge trend-flat">➖ مستوى ثابت بمتوسط ${lastScore}%</span>`;
-            }
-        } else {
-            let singleGrade = getGradeInfo(percentages[0]);
-            indicatorBox.innerHTML = `<span class="trend-badge" style="background:${singleGrade.bg}; color:${singleGrade.color};">📌 تصنيف المستوى: ${singleGrade.text} (بانتظار أدائه في النماذج القادمة)</span>`;
-        }
-
         document.getElementById('student-report-modal').style.display = 'flex';
-
-        setTimeout(() => {
-            const ctxChart = document.getElementById('studentProgressChart').getContext('2d');
-            if (studentLineChart) studentLineChart.destroy();
-
-            if (studentRecords.length === 1) {
-                studentLineChart = new Chart(ctxChart, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'نسبة الإنجاز %',
-                            data: percentages,
-                            backgroundColor: barColors,
-                            borderRadius: 10,
-                            barThickness: 50
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
-                        },
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: true, text: '📊 مستوى أداء الطالب في النموذج الحالي' }
-                        }
-                    }
-                });
-            } else {
-                studentLineChart = new Chart(ctxChart, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'نسبة الإنجاز %',
-                            data: percentages,
-                            borderColor: '#0284c7',
-                            backgroundColor: 'rgba(2, 132, 199, 0.15)',
-                            fill: true,
-                            tension: 0.3,
-                            pointRadius: 6,
-                            pointHoverRadius: 8,
-                            pointBackgroundColor: '#0284c7'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
-                        },
-                        plugins: {
-                            legend: { display: true },
-                            title: { display: true, text: '📈 رسم بياني يتتبع تقدم مستوى الطالب عبر النماذج' }
-                        }
-                    }
-                });
-            }
-        }, 50);
     }
 
     function updateRankings(students) {
         students.sort((a, b) => b.percentage - a.percentage);
-
         const top5List = document.getElementById('top5List');
         top5List.innerHTML = "";
         students.slice(0, 5).forEach(st => {
-            const li = document.createElement('li');
-            li.innerHTML = `<b>${st.name}</b> <span style="color:#15803d; font-weight:bold;">(${st.score}/${st.total})</span>`;
-            top5List.appendChild(li);
+            top5List.innerHTML += `<li><b>${st.name}</b> <span style="color:#15803d; font-weight:bold;">(${st.score}/${st.total})</span></li>`;
         });
 
         const bottom5List = document.getElementById('bottom5List');
         bottom5List.innerHTML = "";
         students.slice(-5).reverse().forEach(st => {
-            const li = document.createElement('li');
-            li.innerHTML = `<b>${st.name}</b> <span style="color:#b91c1c; font-weight:bold;">(${st.score}/${st.total})</span>`;
-            bottom5List.appendChild(li);
+            bottom5List.innerHTML += `<li><b>${st.name}</b> <span style="color:#b91c1c; font-weight:bold;">(${st.score}/${st.total})</span></li>`;
         });
     }
 
@@ -627,18 +510,14 @@
 
         if (data.answers && data.answers.length > 0) {
             data.answers.forEach((ans, index) => {
-                const isCorrect = ans.isCorrect;
-                const card = document.createElement('div');
-                card.className = `answer-card ${isCorrect ? 'ans-correct' : 'ans-wrong'}`;
-                card.innerHTML = `
-                    <strong>س ${index + 1}:${ans.qText}</strong><br>
-                    <span>إجابة الطالب: ${ans.studentAns}${isCorrect ? '✅' : '❌'}</span><br>
-                    ${!isCorrect ? `<span>الإجابة الصحيحة: ${ans.correctAns}</span>` : ''}
-                `;
-                listContainer.appendChild(card);
+                listContainer.innerHTML += `<div class="answer-card ${ans.isCorrect ? 'ans-correct' : 'ans-wrong'}">
+                    <strong>س ${index + 1}: ${ans.qText}</strong><br>
+                    <span>إجابة الطالب: ${ans.studentAns}${ans.isCorrect ? '✅' : '❌'}</span><br>
+                    ${!ans.isCorrect ? `<span>الإجابة الصحيحة: ${ans.correctAns}</span>` : ''}
+                </div>`;
             });
         } else {
-            listContainer.innerHTML = "<p style='text-align:center; padding:20px;'>لا توجد تفاصيل إجابات محفوظة لهذا الطالب.</p>";
+            listContainer.innerHTML = "<p style='text-align:center;'>لا توجد تفاصيل إجابات محفوظة.</p>";
         }
         document.getElementById('review-modal').style.display = 'flex';
     }
@@ -652,23 +531,10 @@
 
         if (m === 'all') {
             subTitle.innerText = "القرآن الكريم وعلومه";
-            if(!isViewOnly) {
-                actionArea.innerHTML = `
-                    <button class="btn-share" onclick="generateShareLink('all')">🔗 مشاركة اللوحة</button>
-                    <button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
-            } else {
-                actionArea.innerHTML = `<button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
-            }
+            actionArea.innerHTML = `<button class="btn-share" onclick="generateShareLink('all')">🔗 مشاركة اللوحة</button><button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
         } else {
             subTitle.innerText = `تحليل نموذج (${m})`;
-            if(!isViewOnly) {
-                actionArea.innerHTML = `
-                    <button class="btn-share" onclick="generateShareLink('${m}')">🔗 مشاركة النموذج</button>
-                    <button class="bulk-delete-btn" onclick="deleteEntireModel('${m}')">🗑️ تصفير النموذج</button>
-                    <button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
-            } else {
-                actionArea.innerHTML = `<button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
-            }
+            actionArea.innerHTML = `<button class="btn-share" onclick="generateShareLink('${m}')">🔗 مشاركة النموذج</button><button class="bulk-delete-btn" onclick="deleteEntireModel('${m}')">🗑️ تصفير النموذج</button><button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
         }
         initListener(m); 
     }
@@ -684,16 +550,6 @@
         navBar.innerHTML = buttonsHtml;
     }
 
-    async function deleteEntireModel(modelId) {
-        if(isViewOnly) return;
-        if(confirm(`تنبيه: هل أنت متأكد من حذف جميع نتائج النموذج رقم (${modelId})؟`)) {
-            const snap = await database.ref("quran_results").orderByChild("model_id").equalTo(modelId).once('value');
-            snap.forEach(child => child.ref.remove());
-            alert("تم تصفير النموذج بنجاح.");
-            setMod('all');
-        }
-    }
-
     function generateShareLink(modelId) {
         const shareUrl = `${window.location.href.split('?')[0]}?view=${modelId}`;
         document.getElementById('share-url').value = shareUrl;
@@ -705,7 +561,7 @@
     function copyLink() { 
         document.getElementById('share-url').select(); 
         document.execCommand("copy"); 
-        alert("تم نسخ رابط المشاركة (للعرض فقط)"); 
+        alert("تم نسخ رابط المشاركة"); 
     }
 
     function updateSummary(s, l) {
@@ -721,38 +577,16 @@
         }
     }
 
-    async function deleteDoc(id) { 
-        if(isViewOnly) return;
-        if(confirm("هل أنت متأكد من حذف الطالب نهائياً من السجل؟")) {
-            try {
-                await database.ref("quran_results/" + id).remove();
-                alert("تم حذف الطالب بنجاح من اللوحة والسحابة.");
-            } catch (error) {
-                console.error("خطأ أثناء الحذف: ", error);
-                alert("حدث خطأ أثناء محاولة حذف الطالب.");
-            }
-        }
-    }
-
     function drawCharts(lv, skills) {
         const ctx1 = document.getElementById('skillsChart').getContext('2d');
         if(chartA) chartA.destroy();
         chartA = new Chart(ctx1, {
             type: 'bar',
             data: {
-                labels: ['الحفظ والتلاوة', 'التجويد والأداء', 'أسباب النزول', 'معاني الكلمات', 'التفسير والدلالات', 'الأحكام والفوائد'],
-                datasets: [{ 
-                    label: 'متوسط الأداء', 
-                    data: skills, 
-                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'],
-                    borderRadius: 8
-                }]
+                labels: ['الحفظ', 'التجويد', 'أسباب النزول', 'معاني الكلمات', 'التفسير', 'الأحكام'],
+                datasets: [{ label: 'متوسط الأداء', data: skills, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'], borderRadius: 8 }]
             },
-            options: { 
-                maintainAspectRatio: false, 
-                scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } },
-                plugins: { legend: { display: false } }
-            }
+            options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
         });
 
         const ctx2 = document.getElementById('levelsChart').getContext('2d');
@@ -761,10 +595,7 @@
             type: 'doughnut',
             data: {
                 labels: ['ممتاز', 'جيد جداً', 'جيد', 'مقبول', 'ضعيف'],
-                datasets: [{ 
-                    data: [lv.exc, lv.vgood, lv.good, lv.acc, lv.weak], 
-                    backgroundColor: ['#10b981', '#0284c7', '#f59e0b', '#b45309', '#ef4444'] 
-                }]
+                datasets: [{ data: [lv.exc, lv.vgood, lv.good, lv.acc, lv.weak], backgroundColor: ['#10b981', '#0284c7', '#f59e0b', '#b45309', '#ef4444'] }]
             },
             options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
         });
