@@ -2,270 +2,100 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>منصة د / سامي محمد العمر ( التحليل الذكي ) - القرآن الكريم وعلومه 😉</title>
+    <title>لوحة التحكم الشاملة - د / سامي محمد العمر</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
-        :root {
-            --bg: #f8fafc; --card-bg: #ffffff; --accent: #0284c7;
-            --gold: #b45309; --danger: #dc2626; --text-main: #1e293b;
-            --text-sub: #64748b; --border: #e2e8f0;
-            --row-alt: #fffdec;
-            --correct-bg: #dcfce7; --correct-text: #166534;
-            --wrong-bg: #fee2e2; --wrong-text: #991b1b;
-        }
-
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; }
-        .dashboard { max-width: 1400px; margin: auto; }
-
-        .model-nav { display: flex; gap: 10px; margin-bottom: 25px; padding: 10px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
-        .model-btn { background: #f1f5f9; border: 1px solid var(--border); padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; white-space: nowrap; }
-        .model-btn.active { background: var(--accent); color: white; }
-
-        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 30px; border-radius: 20px; margin-bottom: 30px; border-bottom: 5px solid var(--accent); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .header h1 { margin: 0; color: var(--accent); font-size: 1.8rem; line-height: 1.3; }
-        .header-sub-title { font-size: 1.4rem; color: #0284c7; font-weight: bold; margin-top: 4px; display: block; }
-
-        .action-buttons { display: flex; gap: 10px; align-items: center; }
-        .btn-share { background: #0ea5e9; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .bulk-delete-btn { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-
-        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 18px; text-align: center; border: 1px solid var(--border); }
-        .stat-card p { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 10px 0 0; }
-
-        .charts-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-bottom: 25px; }
-        @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
-        .chart-wrapper { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid var(--border); height: 380px; box-sizing: border-box; }
-
-        .rankings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-        @media (max-width: 768px) { .rankings-grid { grid-template-columns: 1fr; } }
-
-        .rank-card { background: var(--card-bg); padding: 20px; border-radius: 18px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .rank-card.top { border-right: 6px solid #10b981; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); }
-        .rank-card.bottom { border-right: 6px solid #ef4444; background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%); }
+        :root { --maroon: #1e3a8a; --gold: #0284c7; --bg: #f8fafc; --danger: #dc2626; --success: #10b981; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); padding: 20px; }
+        .admin-card { background: white; max-width: 1000px; margin: auto; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border-top: 8px solid var(--maroon); }
+        .header { text-align: center; border-bottom: 2px solid var(--gold); margin-bottom: 20px; padding-bottom: 10px; }
+        .header h2 { color: var(--maroon); margin: 0; }
+        .bulk-section { background: #f4f4f4; padding: 20px; border-radius: 10px; margin-bottom: 25px; border: 1px dashed var(--maroon); }
+        textarea { width: 100%; height: 150px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: sans-serif; resize: vertical; box-sizing: border-box; }
+        .controls { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
+        .btn-upload { background: var(--maroon); }
+        .btn-delete-all { background: var(--danger); }
         
-        .rank-title { font-size: 1.05rem; font-weight: bold; margin: 0 0 12px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 8px; }
-        .rank-card.top .rank-title { color: #15803d; }
-        .rank-card.bottom .rank-title { color: #b91c1c; }
-
-        .rank-list { margin: 0; padding-right: 20px; font-size: 0.9rem; line-height: 1.8; }
-        .rank-list li { margin-bottom: 4px; }
-
-        .search-box { margin-bottom: 15px; display: flex; gap: 10px; align-items: center; background: white; padding: 15px 20px; border-radius: 15px; border: 1px solid var(--border); }
-        .search-box input { flex: 1; padding: 10px 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; outline: none; transition: 0.2s; }
-        .search-box input:focus { border-color: var(--accent); }
-        .search-box button { background: #f1f5f9; border: 1px solid var(--border); padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; color: var(--text-sub); }
-
-        .table-box { background: var(--card-bg); border-radius: 20px; overflow-x: auto; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 1000px; }
-        th { background: #f8fafc; padding: 15px; color: var(--text-sub); border-bottom: 2px solid var(--border); font-size: 0.85rem; }
-        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .pending-section { background: #fff8e1; border: 2px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 25px; display: none; }
+        .pending-section h3 { color: #d32f2f; margin-top: 0; }
         
-        tbody tr:nth-child(even) { background-color: var(--row-alt); }
-        tbody tr:hover { background-color: #f1f5f9; }
-
-        .prog-circle { width: 45px; height: 6px; background: #eee; border-radius: 10px; overflow: hidden; margin-top: 4px; }
-        .prog-fill { height: 100%; }
-
-        .action-btn {
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.88rem;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .btn-level { color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; }
-        .btn-level:hover { background: #0284c7; color: white; }
-        .btn-review { color: #16a34a; background: #dcfce7; border: 1px solid #bbf7d0; margin-left: 5px; }
-        .btn-review:hover { background: #16a34a; color: white; }
-        .btn-edit-name { color: #b45309; background: #fef3c7; border: 1px solid #fde68a; margin-left: 5px; }
-        .btn-edit-name:hover { background: #b45309; color: white; }
-        .btn-delete { color: #dc2626; background: #fee2e2; border: 1px solid #fecaca; }
-        .btn-delete:hover { background: #dc2626; color: white; }
-
-        #qr-modal, #review-modal, #student-report-modal, #edit-name-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 25px; text-align: center; max-width: 500px; width: 95%; max-height: 85vh; overflow-y: auto; position: relative; }
-        #review-modal .modal-content, #student-report-modal .modal-content { max-width: 800px; text-align: right; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th { background: var(--maroon); color: white; padding: 12px; }
+        td { border-bottom: 1px solid #eee; padding: 10px; text-align: center; }
         
-        .answer-card { padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); line-height: 1.6; }
-        .ans-correct { background: var(--correct-bg); color: var(--correct-text); border-color: #bbf7d0; }
-        .ans-wrong { background: var(--wrong-bg); color: var(--wrong-text); border-color: #fecaca; }
-
-        .time-box {
-            display: flex; gap: 10px; justify-content: space-between; margin: 10px 0;
-            background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.85rem;
-        }
-        .time-item { flex: 1; text-align: center; }
-        .time-item span { display: block; font-weight: bold; margin-top: 4px; color: var(--accent); }
-
-        .trend-badge {
-            display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; margin: 5px 0 10px 0;
-        }
-        .trend-up { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-        .trend-down { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-        .trend-flat { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
-
-        .report-chart-box { position: relative; height: 280px; margin: 15px 0; border: 1px solid var(--border); border-radius: 15px; padding: 15px; background: #fafafa; }
-        .close-btn { background: var(--text-main); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 15px; }
-        .view-only-hide { display: none !important; }
-
-        @media print { .no-print { display: none !important; } }
+        .btn-approve { background: var(--success); border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-reject { background: var(--danger); border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
+        
+        .stats-bar { display: flex; justify-content: space-between; background: #e9ecef; padding: 15px; border-radius: 8px; font-weight: bold; color: var(--maroon); font-size: 1.1rem; margin-bottom: 15px; }
+        .search-container { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 10px; }
+        .search-container h3 { margin: 0; color: var(--maroon); }
+        .search-box { padding: 10px 15px; width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; outline: none; transition: 0.3s; }
+        .search-box:focus { border-color: var(--maroon); box-shadow: 0 0 5px rgba(30,58,138,0.2); }
     </style>
 </head>
 <body>
 
-<div class="dashboard">
-    <div class="model-nav no-print" id="nav-bar"></div>
-
+<div class="admin-card">
     <div class="header">
-        <div>
-            <h1 id="main-title">📖 منصة د / سامي محمد العمر ( التحليل الذكي )</h1>
-            <span class="header-sub-title" id="sub-title">القرآن الكريم وعلومه</span>
-            <p style="color: var(--text-sub); margin: 8px 0 0;">متابعة دقيقة لمستويات التميز والإخفاق لطلاب المادة 😉</p>
-        </div>
-        <div class="action-buttons no-print" id="action-area">
-            <button class="btn-share" onclick="generateShareLink(selectedModel)">🔗 مشاركة اللوحة</button>
-            <button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>
-        </div>
+        <h2>لوحة التحكم الشاملة - د. سامي محمد العمر 🔒</h2>
+        <p>إدارة الطلاب المعتمدين ومراجعة طلبات التسجيل الجديدة (خاص بسحابة د. سامي)</p>
     </div>
 
-    <div class="stats-container">
-        <div class="stat-card"><h3>المختبرين</h3><p id="count">0</p></div>
-        <div class="stat-card"><h3>متوسط الأداء</h3><p id="avg">0%</p></div>
-        <div class="stat-card"><h3>أعلى نتيجة</h3><p id="max">0%</p></div>
-        <div class="stat-card"><h3>دون المتوسط</h3><p id="low">0</p></div>
-    </div>
-
-    <div class="charts-grid">
-        <div class="chart-wrapper"><canvas id="skillsChart"></canvas></div>
-        <div class="chart-wrapper"><canvas id="levelsChart"></canvas></div>
-    </div>
-
-    <div class="rankings-grid">
-        <div class="rank-card top">
-            <div class="rank-title">🏆 أفضل ٥ طلاب <span>(الأعلى درجات)</span></div>
-            <ol class="rank-list" id="top5List"></ol>
-        </div>
-        <div class="rank-card bottom">
-            <div class="rank-title">⚠️ أقل ٥ طلاب درجات <span>(بحاجة لمتابعة)</span></div>
-            <ol class="rank-list" id="bottom5List"></ol>
-        </div>
-    </div>
-
-    <div class="search-box no-print">
-        <input type="text" id="student-search-input" placeholder="🔍 ابحث عن اسم الطالب..." oninput="filterTableBySearch()">
-        <button onclick="clearSearch()">مسح</button>
-    </div>
-
-    <div class="table-box">
-        <table>
+    <!-- قسم الطلبات المعلقة -->
+    <div class="pending-section" id="pendingSection">
+        <h3>🔔 طلبات تسجيل جديدة بانتظار المراجعة</h3>
+        <table id="pendingTable">
             <thead>
                 <tr>
-                    <th>اسم الطالب</th>
-                    <th>الدرجة</th>
-                    <th>الحفظ والتلاوة</th>
-                    <th>التجويد والأداء</th>
-                    <th>أسباب النزول</th>
-                    <th>معاني الكلمات</th>
-                    <th>التفسير والدلالات</th>
-                    <th>الأحكام والفوائد</th>
-                    <th>النموذج</th>
-                    <th class="no-print">مستوى الطالب</th>
-                    <th id="action-header" class="no-print">إجراء</th>
+                    <th>الاسم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الإجراء</th>
                 </tr>
             </thead>
-            <tbody id="data-rows"></tbody>
+            <tbody></tbody>
         </table>
     </div>
-</div>
 
-<!-- نافذة تعديل اسم الطالب -->
-<div id="edit-name-modal">
-    <div class="modal-content" style="text-align: right;">
-        <h3 style="color: var(--accent); margin-top: 0;">✏️ تعديل اسم الطالب</h3>
-        <p style="font-size: 0.9rem; color: var(--text-sub);">هذا التعديل سيقوم بتحديث اسم الطالب في هذا الاختبار وفي كل سجلاته فوراً.</p>
-        <input type="hidden" id="edit-doc-id">
-        <label style="font-weight: bold; display: block; margin-bottom: 5px;">الاسم الصحيح الجديد:</label>
-        <input type="text" id="new-student-name-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; box-sizing: border-box; margin-bottom: 15px;">
-        <div style="text-align: center;">
-            <button class="close-btn" style="background: var(--accent); margin-left: 10px;" onclick="saveNewStudentName()">حفظ التعديل</button>
-            <button class="close-btn" style="background: #666;" onclick="closeModal('edit-name-modal')">إلغاء</button>
+    <!-- قسم الرفع الجماعي -->
+    <div class="bulk-section">
+        <label><strong>لصق القائمة هنا (سيتم اعتمادهم مباشرة للمعتمدين في سحابة د. سامي):</strong></label>
+        <textarea id="bulkInput" placeholder="الصق هنا.. لا يهم إذا بدأ السطر بالاسم أو الإيميل"></textarea>
+        <div class="controls">
+            <button class="btn btn-upload" onclick="superSmartBulkAdd()">بدء المعالجة والرفع 🚀</button>
+            <button class="btn btn-delete-all" onclick="deleteAllStudents()">حذف الكل (المعتمدين) 🗑️</button>
         </div>
     </div>
-</div>
 
-<!-- نافذة QR Code -->
-<div id="qr-modal">
-    <div class="modal-content">
-        <h3>مشاركة تقرير اللوحة (للعرض فقط)</h3>
-        <div id="qrcode" style="display: flex; justify-content: center; margin: 20px 0;"></div>
-        <input type="text" id="share-url" readonly style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; text-align: center;">
-        <button class="close-btn" onclick="copyLink()">نسخ الرابط</button>
-        <button class="close-btn" style="background:#666" onclick="closeModal('qr-modal')">إغلاق</button>
+    <!-- شريط الإحصائيات -->
+    <div class="stats-bar">
+        <span id="approvedCount">الطلاب المعتمدين: 0</span>
+        <span id="pendingCountBadge" style="color: #d32f2f;">الطلبات المعلقة: 0</span>
     </div>
-</div>
 
-<!-- نافذة مراجعة إجابات الطالب -->
-<div id="review-modal">
-    <div class="modal-content">
-        <h3 id="review-student-name">مراجعة إجابات الطالب</h3>
-        <hr>
-        <div id="review-list"></div>
-        <button class="close-btn" onclick="closeModal('review-modal')">إغلاق النافذة</button>
+    <!-- رأس جدول المعتمدين مع مربع البحث الذكي -->
+    <div class="search-container">
+        <h3>🎓 قائمة الطلاب المعتمدين (المصرح لهم بالاختبار)</h3>
+        <input type="text" id="searchInput" class="search-box" onkeyup="searchStudents()" placeholder="🔍 ابحث عن اسم الطالب أو إيميله...">
     </div>
-</div>
 
-<!-- نافذة التقرير الذكي والتراكمي للطالب -->
-<div id="student-report-modal">
-    <div class="modal-content">
-        <h2 id="report-student-name" style="margin:0 0 5px 0; color:var(--accent);">تقرير أداء الطالب</h2>
-        
-        <div class="time-box">
-            <div class="time-item">
-                🕒 آخر اختبار تم تقديمه:
-                <span id="last-test-time">-</span>
-            </div>
-            <div class="time-item" style="border-right:1px solid #e2e8f0;">
-                📅 موعد الاختبار القادم:
-                <span id="next-test-time" style="color:#059669;">-</span>
-            </div>
-        </div>
-
-        <div id="trend-indicator-box"></div>
-
-        <div class="report-chart-box">
-            <canvas id="studentProgressChart"></canvas>
-        </div>
-
-        <h4 style="margin: 10px 0 8px 0;">📋 سجل النماذج والاختبارات المكتملة:</h4>
-        <div style="overflow-x:auto;">
-            <table style="width:100%; border:1px solid var(--border); font-size:0.85rem;" id="student-models-table">
-                <thead>
-                    <tr style="background:#f1f5f9;">
-                        <th style="padding:8px; text-align:right;">النموذج</th>
-                        <th style="padding:8px; text-align:center;">التاريخ والتوقيت</th>
-                        <th style="padding:8px; text-align:center;">الدرجة</th>
-                        <th style="padding:8px; text-align:center;">النسبة والتصنيف</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <button class="close-btn" onclick="closeModal('student-report-modal')">إغلاق التقرير</button>
-    </div>
+    <table id="studentsTable">
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>البريد الإلكتروني</th>
+                <th>الإجراء</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 <script>
-    // إعدادات Firebase المستخرجة بدقة من صورة الإعدادات الخاصة بزميلك
+    // إعدادات سحابة الدكتور سامي الخاصة بمشروعه الجديد
     const firebaseConfig = {
-      apiKey: "AIzaSyAJKKo_NfmOMA0955ulSRDnwQvfHLeIz_s",
+      apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
       authDomain: "samy-28452.firebaseapp.com",
       databaseURL: "https://samy-28452-default-rtdb.firebaseio.com",
       projectId: "samy-28452",
@@ -274,494 +104,155 @@
       appId: "1:248617107030:web:1a884c43c2461e24c945f7",
       measurementId: "G-M0BB8TTD91"
     };
-
+    
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const dbRef = database.ref("quran_results");
+    const db = firebase.firestore();
 
-    let chartA, chartB, studentLineChart = null;
-    let selectedModel = 'all';
-    let globalSnapshotData = []; 
-    let currentFilteredQuery = '';
+    function fetchStudents() {
+        const approvedTbody = document.querySelector("#studentsTable tbody");
+        const pendingTbody = document.querySelector("#pendingTable tbody");
+        const pendingSection = document.getElementById("pendingSection");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const isViewOnly = urlParams.has('view');
+        // 1. مراقبة جدول الطلاب المعتمدين
+        db.collection("allowed_students").orderBy("name").onSnapshot((snapshot) => {
+            let approvedCount = snapshot.size;
+            approvedTbody.innerHTML = "";
+            document.getElementById("approvedCount").innerText = `الطلاب المعتمدين: ${approvedCount}`;
 
-    function calculateStudentSkills(d, p) {
-        if (d.sections && typeof d.sections === 'object') {
-            return d.sections;
-        }
-
-        let skills = { est: p, ikm: p, swh: p, arb: p, sah: p, math: p };
-
-        if (d.answers && Array.isArray(d.answers) && d.answers.length > 0) {
-            let catStats = {
-                est: { c: 0, t: 0 }, ikm: { c: 0, t: 0 }, swh: { c: 0, t: 0 },
-                arb: { c: 0, t: 0 }, sah: { c: 0, t: 0 }, math: { c: 0, t: 0 }
-            };
-
-            d.answers.forEach((ans, idx) => {
-                let cat = ans.skill || ans.type;
-                if (!cat) {
-                    const skillKeys = ['est', 'ikm', 'swh', 'arb', 'sah', 'math'];
-                    cat = skillKeys[idx % skillKeys.length];
-                }
-                if (catStats[cat]) {
-                    catStats[cat].t++;
-                    if (ans.isCorrect) catStats[cat].c++;
-                }
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const email = doc.id;
+                approvedTbody.innerHTML += `
+                    <tr>
+                        <td>${data.name}</td>
+                        <td>${email}</td>
+                        <td><button class="btn-reject" onclick="deleteAllowed('${email}')">🗑️ حذف</button></td>
+                    </tr>`;
             });
+            searchStudents();
+        });
 
-            Object.keys(catStats).forEach(k => {
-                if (catStats[k].t > 0) {
-                    skills[k] = Math.round((catStats[k].c / catStats[k].t) * 100);
-                }
+        // 2. مراقبة جدول الطلبات المعلقة
+        db.collection("pending_students").orderBy("name").onSnapshot((snapshot) => {
+            let pendingCount = snapshot.size;
+            pendingTbody.innerHTML = "";
+            document.getElementById("pendingCountBadge").innerText = `الطلبات المعلقة: ${pendingCount}`;
+            pendingSection.style.display = pendingCount > 0 ? "block" : "none";
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const email = doc.id;
+                pendingTbody.innerHTML += `
+                    <tr>
+                        <td>${data.name}</td>
+                        <td>${email}</td>
+                        <td>
+                            <button class="btn-approve" onclick="approveStudent('${email}', '${data.name}')">✅ قبول</button>
+                            <button class="btn-reject" onclick="deletePending('${email}')">❌ رفض</button>
+                        </td>
+                    </tr>`;
             });
-        }
-        return skills;
-    }
-
-    function initListener(modelId) {
-        if(isViewOnly) {
-            document.getElementById('action-header').classList.add('view-only-hide');
-        }
-
-        dbRef.on('value', snapshot => {
-            updateModelButtons(snapshot);
-            
-            globalSnapshotData = [];
-            snapshot.forEach(childSnap => {
-                globalSnapshotData.push({ id: childSnap.key, ...childSnap.val() });
-            });
-
-            renderTableFromSnapshot();
         });
     }
 
-    function filterTableBySearch() {
-        currentFilteredQuery = document.getElementById('student-search-input').value.trim().toLowerCase();
-        renderTableFromSnapshot();
-    }
-
-    function clearSearch() {
-        const input = document.getElementById('student-search-input');
-        if(input) {
-            input.value = '';
-            currentFilteredQuery = '';
-            renderTableFromSnapshot();
-        }
-    }
-
-    function renderTableFromSnapshot() {
-        let scores = [], rows = "";
-        let levels = { exc: 0, vgood: 0, good: 0, acc: 0, weak: 0 };
-        let skillsSums = { est: 0, ikm: 0, swh: 0, arb: 0, sah: 0, math: 0 };
-        let studentCount = 0;
-        let studentsList = [];
-
-        let displayList = [...globalSnapshotData].reverse();
-
-        displayList.forEach(d => {
-            let actualModel = d.model_id || 'سورة البقرة';
-            if (selectedModel === 'all' || actualModel == selectedModel) {
-                
-                if (currentFilteredQuery && !d.name.toLowerCase().includes(currentFilteredQuery)) {
-                    return;
-                }
-
-                const totalScore = d.total || 100;
-                const p = Math.round((d.score / totalScore) * 100);
-                scores.push(p);
-                studentCount++;
-
-                studentsList.push({
-                    name: d.name,
-                    score: d.score,
-                    total: totalScore,
-                    percentage: p
-                });
-
-                if(p >= 90) levels.exc++;
-                else if(p >= 80) levels.vgood++;
-                else if(p >= 70) levels.good++;
-                else if(p >= 60) levels.acc++;
-                else levels.weak++;
-
-                let s = calculateStudentSkills(d, p);
-
-                Object.keys(skillsSums).forEach(k => skillsSums[k] += (s[k] !== undefined ? s[k] : p));
-
-                rows += `<tr>
-                    <td><strong>${d.name}</strong></td>
-                    <td style="color:var(--accent); font-weight:bold">${d.score}/${totalScore}</td>${['est','ikm','swh','arb','sah','math'].map(k => {
-                        let val = s[k] !== undefined ? s[k] : p;
-                        return `<td>${val}%<div class="prog-circle"><div class="prog-fill" style="width:${val}\%; background:${val<60?'#ef4444':val<80?'#f59e0b':'#10b981'}"></div></div></td>`;
-                    }).join('')}
-                    <td>${actualModel}</td>
-                    <td class="no-print">
-                        <button class="action-btn btn-level" data-student="${encodeURIComponent(d.name)}" onclick="openStudentReportFromAttr(this)">📊 المستوى</button>
-                    </td>
-                    <td class="no-print ${isViewOnly ? 'view-only-hide' : ''}">
-                        <button class="action-btn btn-review" onclick="openReview('${d.id}')">👁 مراجعة</button>
-                        <button class="action-btn btn-edit-name" onclick="openEditNameModal('${d.id}', '${d.name}')">✏️ تعديل</button>
-                        <button class="action-btn btn-delete" onclick="deleteDoc('${d.id}')">حذف</button>
-                    </td>
-                </tr>`;
-            }
-        });
-
-        document.getElementById('data-rows').innerHTML = rows;
-        updateSummary(scores, levels);
-        updateRankings(studentsList);
-
-        let avgSkills = ['est','ikm','swh','arb','sah','math'].map(k => studentCount > 0 ? Math.round(skillsSums[k] / studentCount) : 0);
-        drawCharts(levels, avgSkills);
-    }
-
-    function openEditNameModal(docId, currentName) {
-        document.getElementById('edit-doc-id').value = docId;
-        document.getElementById('new-student-name-input').value = currentName;
-        document.getElementById('edit-name-modal').style.display = 'flex';
-    }
-
-    async function saveNewStudentName() {
-        const docId = document.getElementById('edit-doc-id').value;
-        const newName = document.getElementById('new-student-name-input').value.trim();
-        
-        if (!newName) {
-            alert('الرجاء إدخال اسم صحيح.');
-            return;
-        }
-
+    async function approveStudent(email, name) {
         try {
-            await database.ref("quran_results/" + docId).update({ name: newName });
-            closeModal('edit-name-modal');
-            alert('تم تحديث اسم الطالب بنجاح!');
-        } catch (error) {
-            console.error("خطأ في التحديث: ", error);
-            alert('حدث خطأ أثناء تحديث الاسم.');
-        }
-    }
-
-    function openStudentReportFromAttr(element) {
-        const rawName = element.getAttribute('data-student');
-        if (rawName) {
-            openStudentReport(decodeURIComponent(rawName));
-        }
-    }
-
-    function getGradeInfo(pct) {
-        if(pct >= 90) return { text: "ممتاز 🟢", color: "#166534", bg: "#dcfce7" };
-        if(pct >= 80) return { text: "جيد جداً 🔵", color: "#0284c7", bg: "#e0f2fe" };
-        if(pct >= 70) return { text: "جيد 🟡", color: "#b45309", bg: "#fef3c7" };
-        if(pct >= 60) return { text: "مقبول 🟠", color: "#d97706", bg: "#ffedd5" };
-        return { text: "ضعيف 🔴", color: "#dc2626", bg: "#fee2e2" };
-    }
-
-    function formatDateTime(timeVal) {
-        if (!timeVal) return "غير مسجل";
-        let dateObj;
-        if (typeof timeVal === 'number' || typeof timeVal === 'string') {
-            dateObj = new Date(timeVal);
-        } else {
-            return "غير مسجل";
-        }
-        return dateObj.toLocaleString('ar-SA', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    }
-
-    function getNextTestTime(timeVal) {
-        if (!timeVal) return "يحدد لاحقاً";
-        let dateObj = new Date(timeVal);
-        dateObj.setDate(dateObj.getDate() + 7);
-        return dateObj.toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'short' });
-    }
-
-    function openStudentReport(studentName) {
-        document.getElementById('report-student-name').innerText = `👤 تقرير أداء الطالب: ${studentName}`;
-        
-        let studentRecords = globalSnapshotData.filter(item => item.name === studentName);
-
-        if (studentRecords.length === 0) return;
-
-        let labels = [];
-        let percentages = [];
-        let barColors = [];
-        let tableRowsHtml = "";
-
-        let lastRecord = studentRecords[studentRecords.length - 1];
-        document.getElementById('last-test-time').innerText = formatDateTime(lastRecord.timestamp || lastRecord.time);
-        document.getElementById('next-test-time').innerText = getNextTestTime(lastRecord.timestamp || lastRecord.time);
-
-        studentRecords.forEach(rec => {
-            let mName = rec.model_id || 'اختبار القرآن';
-            let totalScore = rec.total || 100;
-            let pct = Math.round((rec.score / totalScore) * 100);
-            let grade = getGradeInfo(pct);
-            let formattedTime = formatDateTime(rec.timestamp || rec.time);
-            
-            labels.push(mName);
-            percentages.push(pct);
-            barColors.push(grade.color);
-
-            tableRowsHtml += `
-                <tr>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;"><b>${mName}</b></td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:#64748b; font-size:0.8rem;">${formattedTime}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:var(--accent); font-weight:bold;">${rec.score} من ${totalScore}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;"><span style="font-weight:bold; color:${grade.color}; padding:3px 8px; background:${grade.bg}; border-radius:12px;">${pct}\% (${grade.text})</span></td>
-                </tr>
-            `;
-        });
-
-        document.querySelector("#student-models-table tbody").innerHTML = tableRowsHtml;
-
-        const indicatorBox = document.getElementById('trend-indicator-box');
-        if (studentRecords.length > 1) {
-            let firstScore = percentages[0];
-            let lastScore = percentages[percentages.length - 1];
-            let diff = lastScore - firstScore;
-
-            if (diff > 0) {
-                indicatorBox.innerHTML = `<span class="trend-badge trend-up">📈 تقدم ملحوظ بمقدار +${diff}% مقارنة بأول اختبار</span>`;
-            } else if (diff < 0) {
-                indicatorBox.innerHTML = `<span class="trend-badge trend-down">📉 تراجع في المستوى بمقدار ${diff}% يحتاج توجيه ومتابعة</span>`;
-            } else {
-                indicatorBox.innerHTML = `<span class="trend-badge trend-flat">➖ مستوى ثابت بمتوسط ${lastScore}%</span>`;
-            }
-        } else {
-            let singleGrade = getGradeInfo(percentages[0]);
-            indicatorBox.innerHTML = `<span class="trend-badge" style="background:${singleGrade.bg}; color:${singleGrade.color};">📌 تصنيف المستوى: ${singleGrade.text} (بانتظار أدائه في النماذج القادمة)</span>`;
-        }
-
-        document.getElementById('student-report-modal').style.display = 'flex';
-
-        setTimeout(() => {
-            const ctxChart = document.getElementById('studentProgressChart').getContext('2d');
-            if (studentLineChart) studentLineChart.destroy();
-
-            if (studentRecords.length === 1) {
-                studentLineChart = new Chart(ctxChart, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'نسبة الإنجاز %',
-                            data: percentages,
-                            backgroundColor: barColors,
-                            borderRadius: 10,
-                            barThickness: 50
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
-                        },
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: true, text: '📊 مستوى أداء الطالب في النموذج الحالي' }
-                        }
-                    }
-                });
-            } else {
-                studentLineChart = new Chart(ctxChart, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'نسبة الإنجاز %',
-                            data: percentages,
-                            borderColor: '#0284c7',
-                            backgroundColor: 'rgba(2, 132, 199, 0.15)',
-                            fill: true,
-                            tension: 0.3,
-                            pointRadius: 6,
-                            pointHoverRadius: 8,
-                            pointBackgroundColor: '#0284c7'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
-                        },
-                        plugins: {
-                            legend: { display: true },
-                            title: { display: true, text: '📈 رسم بياني يتتبع تقدم مستوى الطالب عبر النماذج' }
-                        }
-                    }
-                });
-            }
-        }, 50);
-    }
-
-    function updateRankings(students) {
-        students.sort((a, b) => b.percentage - a.percentage);
-
-        const top5List = document.getElementById('top5List');
-        top5List.innerHTML = "";
-        students.slice(0, 5).forEach(st => {
-            const li = document.createElement('li');
-            li.innerHTML = `<b>${st.name}</b> <span style="color:#15803d; font-weight:bold;">(${st.score}/${st.total})</span>`;
-            top5List.appendChild(li);
-        });
-
-        const bottom5List = document.getElementById('bottom5List');
-        bottom5List.innerHTML = "";
-        students.slice(-5).reverse().forEach(st => {
-            const li = document.createElement('li');
-            li.innerHTML = `<b>${st.name}</b> <span style="color:#b91c1c; font-weight:bold;">(${st.score}/${st.total})</span>`;
-            bottom5List.appendChild(li);
-        });
-    }
-
-    async function openReview(docId) {
-        const snap = await database.ref("quran_results/" + docId).once('value');
-        const data = snap.val();
-        document.getElementById('review-student-name').innerText = `مراجعة إجابات الطالب: ${data.name}`;
-        const listContainer = document.getElementById('review-list');
-        listContainer.innerHTML = "";
-
-        if (data.answers && data.answers.length > 0) {
-            data.answers.forEach((ans, index) => {
-                const isCorrect = ans.isCorrect;
-                const card = document.createElement('div');
-                card.className = `answer-card ${isCorrect ? 'ans-correct' : 'ans-wrong'}`;
-                card.innerHTML = `
-                    <strong>س ${index + 1}:${ans.qText}</strong><br>
-                    <span>إجابة الطالب: ${ans.studentAns}${isCorrect ? '✅' : '❌'}</span><br>
-                    ${!isCorrect ? `<span>الإجابة الصحيحة: ${ans.correctAns}</span>` : ''}
-                `;
-                listContainer.appendChild(card);
+            await db.collection("allowed_students").doc(email).set({
+                name: name,
+                added_at: firebase.firestore.FieldValue.serverTimestamp()
             });
-        } else {
-            listContainer.innerHTML = "<p style='text-align:center; padding:20px;'>لا توجد تفاصيل إجابات محفوظة لهذا الطالب.</p>";
+            await db.collection("pending_students").doc(email).delete();
+        } catch (error) {
+            alert("حدث خطأ أثناء الموافقة.");
         }
-        document.getElementById('review-modal').style.display = 'flex';
     }
 
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    async function deletePending(email) {
+        if(confirm(`رفض وحذف ${email} من قائمة الانتظار؟`)) {
+            await db.collection("pending_students").doc(email).delete();
+        }
+    }
 
-    function setMod(m) { 
-        selectedModel = m; 
-        const actionArea = document.getElementById('action-area');
-        const subTitle = document.getElementById('sub-title');
+    async function deleteAllowed(email) {
+        if(confirm(`حذف ${email} من الطلاب المعتمدين؟`)) {
+            await db.collection("allowed_students").doc(email).delete();
+        }
+    }
 
-        if (m === 'all') {
-            subTitle.innerText = "القرآن الكريم وعلومه";
-            if(!isViewOnly) {
-                actionArea.innerHTML = `
-                    <button class="btn-share" onclick="generateShareLink('all')">🔗 مشاركة اللوحة</button>
-                    <button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
-            } else {
-                actionArea.innerHTML = `<button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
+    async function superSmartBulkAdd() {
+        const input = document.getElementById("bulkInput").value.trim();
+        if(!input) return alert("يرجى لصق البيانات");
+
+        const lines = input.split('\n').map(l => l.trim()).filter(l => l !== "");
+        const batch = db.batch();
+        let count = 0;
+
+        for(let i = 0; i < lines.length; i++) {
+            let line1 = lines[i];
+            let line2 = lines[i+1];
+
+            if(!line2) break;
+
+            let name = "", email = "";
+
+            if(!line1.includes('@') && line2.includes('@')) {
+                name = line1; email = line2.toLowerCase();
+                i++;
+            } else if(line1.includes('@') && !line2.includes('@')) {
+                email = line1.toLowerCase(); name = line2;
+                i++;
             }
-        } else {
-            subTitle.innerText = `تحليل نموذج (${m})`;
-            if(!isViewOnly) {
-                actionArea.innerHTML = `
-                    <button class="btn-share" onclick="generateShareLink('${m}')">🔗 مشاركة النموذج</button>
-                    <button class="bulk-delete-btn" onclick="deleteEntireModel('${m}')">🗑️ تصفير النموذج</button>
-                    <button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
-            } else {
-                actionArea.innerHTML = `<button class="model-btn" style="background:#1e293b; color:white" onclick="window.print()">🖨️ طباعة</button>`;
+
+            if(name && email) {
+                const ref = db.collection("allowed_students").doc(email);
+                batch.set(ref, { name: name, added_at: firebase.firestore.FieldValue.serverTimestamp() });
+                count++;
             }
         }
-        initListener(m); 
-    }
 
-    function updateModelButtons(snapshot) {
-        const navBar = document.getElementById('nav-bar');
-        const foundModels = new Set();
-        snapshot.forEach(childSnap => foundModels.add(childSnap.val().model_id?.toString() || "اختبار الشفوي"));
-        let buttonsHtml = `<button class="model-btn ${selectedModel === 'all' ? 'active' : ''}" onclick="setMod('all')">🌍 عرض الكل</button>`;
-        Array.from(foundModels).sort().forEach(mId => {
-            buttonsHtml += `<button class="model-btn ${selectedModel === mId ? 'active' : ''}" onclick="setMod('${mId}')">${mId}</button>`;
-        });
-        navBar.innerHTML = buttonsHtml;
-    }
-
-    async function deleteEntireModel(modelId) {
-        if(isViewOnly) return;
-        if(confirm(`تنبيه: هل أنت متأكد من حذف جميع نتائج النموذج رقم (${modelId})؟`)) {
-            const snap = await database.ref("quran_results").orderByChild("model_id").equalTo(modelId).once('value');
-            snap.forEach(child => child.ref.remove());
-            alert("تم تصفير النموذج بنجاح.");
-            setMod('all');
-        }
-    }
-
-    function generateShareLink(modelId) {
-        const shareUrl = `${window.location.href.split('?')[0]}?view=${modelId}`;
-        document.getElementById('share-url').value = shareUrl;
-        document.getElementById('qrcode').innerHTML = "";
-        new QRCode(document.getElementById("qrcode"), { text: shareUrl, width: 150, height: 150 });
-        document.getElementById('qr-modal').style.display = 'flex';
-    }
-
-    function copyLink() { 
-        document.getElementById('share-url').select(); 
-        document.execCommand("copy"); 
-        alert("تم نسخ رابط المشاركة (للعرض فقط)"); 
-    }
-
-    function updateSummary(s, l) {
-        document.getElementById('count').innerText = s.length;
-        if(s.length > 0) {
-            document.getElementById('avg').innerText = Math.round(s.reduce((a,b)=>a+b,0)/s.length) + "%";
-            document.getElementById('max').innerText = Math.max(...s) + "%";
-            document.getElementById('low').innerText = l.acc + l.weak;
+        if(count > 0) {
+            await batch.commit();
+            alert(`تم رفع واعتماد ${count} طالب مباشرة في سحابة د. سامي بنجاح!`);
+            document.getElementById("bulkInput").value = "";
         } else {
-            document.getElementById('avg').innerText = "0%";
-            document.getElementById('max').innerText = "0%";
-            document.getElementById('low').innerText = "0";
+            alert("تنسيق غير معروف. تأكد من وجود الاسم والإيميل في سطرين متتاليين.");
         }
     }
 
-    async function deleteDoc(id) { 
-        if(isViewOnly) return;
-        if(confirm("حذف الطالب؟")) await database.ref("quran_results/" + id).remove(); 
+    async function deleteAllStudents() {
+        if(!confirm("تحذير: هل أنت متأكد من مسح جميع الطلاب المعتمدين لدكتور سامي؟")) return;
+        const snapshot = await db.collection("allowed_students").get();
+        const batch = db.batch();
+        snapshot.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+        alert("تمت تصفية قائمة المعتمدين بالكامل.");
     }
 
-    function drawCharts(lv, skills) {
-        const ctx1 = document.getElementById('skillsChart').getContext('2d');
-        if(chartA) chartA.destroy();
-        chartA = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['الحفظ والتلاوة', 'التجويد والأداء', 'أسباب النزول', 'معاني الكلمات', 'التفسير والدلالات', 'الأحكام والفوائد'],
-                datasets: [{ 
-                    label: 'متوسط الأداء', 
-                    data: skills, 
-                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'],
-                    borderRadius: 8
-                }]
-            },
-            options: { 
-                maintainAspectRatio: false, 
-                scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } },
-                plugins: { legend: { display: false } }
-            }
-        });
+    function searchStudents() {
+        let input = document.getElementById("searchInput");
+        let filter = input.value.toUpperCase();
+        let table = document.getElementById("studentsTable");
+        let tr = table.getElementsByTagName("tr");
 
-        const ctx2 = document.getElementById('levelsChart').getContext('2d');
-        if(chartB) chartB.destroy();
-        chartB = new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: ['ممتاز', 'جيد جداً', 'جيد', 'مقبول', 'ضعيف'],
-                datasets: [{ 
-                    data: [lv.exc, lv.vgood, lv.good, lv.acc, lv.weak], 
-                    backgroundColor: ['#10b981', '#0284c7', '#f59e0b', '#b45309', '#ef4444'] 
-                }]
-            },
-            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-        });
+        for (let i = 1; i < tr.length; i++) {
+            let tdName = tr[i].getElementsByTagName("td")[0];
+            let tdEmail = tr[i].getElementsByTagName("td")[1];
+            
+            if (tdName || tdEmail) {
+                let txtValueName = tdName.textContent || tdName.innerText;
+                let txtValueEmail = tdEmail.textContent || tdEmail.innerText;
+                
+                if (txtValueName.toUpperCase().indexOf(filter) > -1 || txtValueEmail.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }       
+        }
     }
 
-    setMod('all');
+    fetchStudents();
 </script>
+
 </body>
 </html>
