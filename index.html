@@ -126,12 +126,13 @@
                 <tr>
                     <th>اسم الطالب</th>
                     <th>الدرجة</th>
-                    <th>الحفظ والتلاوة</th>
-                    <th>التجويد والأداء</th>
-                    <th>أسباب النزول</th>
-                    <th>معاني الكلمات</th>
-                    <th>التفسير والدلالات</th>
-                    <th>الأحكام والفوائد</th>
+                    <th>اختيار متعدد</th>
+                    <th>عرّف</th>
+                    <th>عدد</th>
+                    <th>اذكر</th>
+                    <th>المزاوجة</th>
+                    <th>صح وخطأ</th>
+                    <th>صحح</th>
                     <th>النموذج</th>
                     <th id="action-header" class="no-print">إجراء</th>
                 </tr>
@@ -420,7 +421,7 @@
         chartA = new Chart(ctx1, {
             type: 'bar',
             data: {
-                labels: ['الحفظ', 'التجويد', 'أسباب النزول', 'معاني الكلمات', 'التفسير', 'الأحكام'],
+               labels: ['اختيار متعدد', 'عرّف', 'عدد', 'اذكر', 'المزاوجة', 'صح وخطأ', 'صحح']
                 datasets: [{ label: 'متوسط الأداء', data: skills, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'], borderRadius: 8 }]
             },
             options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
