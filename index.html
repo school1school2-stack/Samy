@@ -229,7 +229,8 @@
     function renderTableFromSnapshot() {
         let scores = [], rows = "";
         let levels = { exc: 0, vgood: 0, good: 0, acc: 0, weak: 0 };
-        let skillsSums = { est: 0, ikm: 0, swh: 0, arb: 0, sah: 0, math: 0 };
+        // مفاتيح المهارات السبعة المطلوبة المحددة بشكل مطابق
+        let skillsSums = { mcq: 0, def: 0, num: 0, men: 0, mat: 0, tf: 0, cor: 0 };
         let studentCount = 0;
         let studentsList = [];
 
@@ -253,12 +254,12 @@
                 else if(p >= 60) levels.acc++;
                 else levels.weak++;
 
-                let s = d.sections || { est: p, ikm: p, swh: p, arb: p, sah: p, math: p };
+                let s = d.sections || { mcq: p, def: p, num: p, men: p, mat: p, tf: p, cor: p };
                 Object.keys(skillsSums).forEach(k => skillsSums[k] += (s[k] !== undefined ? s[k] : p));
 
                 rows += `<tr>
                     <td><strong>${d.name}</strong></td>
-                    <td style="color:var(--accent); font-weight:bold">${d.score}/${totalScore}</td>${['est','ikm','swh','arb','sah','math'].map(k => {
+                    <td style="color:var(--accent); font-weight:bold">${d.score}/${totalScore}</td>${['mcq','def','num','men','mat','tf','cor'].map(k => {
                         let val = s[k] !== undefined ? s[k] : p;
                         return `<td>${val}%</td>`;
                     }).join('')}
@@ -275,7 +276,7 @@
         document.getElementById('data-rows').innerHTML = rows;
         updateSummary(scores, levels);
         updateRankings(studentsList);
-        let avgSkills = ['est','ikm','swh','arb','sah','math'].map(k => studentCount > 0 ? Math.round(skillsSums[k] / studentCount) : 0);
+        let avgSkills = ['mcq','def','num','men','mat','tf','cor'].map(k => studentCount > 0 ? Math.round(skillsSums[k] / studentCount) : 0);
         drawCharts(levels, avgSkills);
     }
 
@@ -422,7 +423,12 @@
             type: 'bar',
             data: {
                 labels: ['اختيار متعدد', 'عرّف', 'عدد', 'اذكر', 'المزاوجة', 'صح وخطأ', 'صحح'],
-                datasets: [{ label: 'متوسط الأداء', data: skills, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'], borderRadius: 8 }]
+                datasets: [{ 
+                    label: 'متوسط الأداء', 
+                    data: skills, 
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'], 
+                    borderRadius: 8 
+                }]
             },
             options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
         });
