@@ -59,19 +59,46 @@
         tbody tr:nth-child(even) { background-color: var(--row-alt); }
 
         .action-btn { border: none; background: none; cursor: pointer; font-weight: bold; font-size: 0.88rem; padding: 5px 10px; border-radius: 8px; transition: all 0.2s; }
+        .btn-level { color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; margin-left: 5px; }
+        .btn-level:hover { background: #0284c7; color: white; }
         .btn-review { color: #16a34a; background: #dcfce7; border: 1px solid #bbf7d0; margin-left: 5px; }
         .btn-edit-name { color: #b45309; background: #fef3c7; border: 1px solid #fde68a; margin-left: 5px; }
         .btn-delete { color: #dc2626; background: #fee2e2; border: 1px solid #fecaca; }
 
-        #qr-modal, #review-modal, #edit-name-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        #qr-modal, #review-modal, #edit-name-modal, #student-report-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 25px; text-align: center; max-width: 500px; width: 95%; max-height: 85vh; overflow-y: auto; position: relative; }
-        #review-modal .modal-content { max-width: 800px; text-align: right; }
+        #review-modal .modal-content, #student-report-modal .modal-content { max-width: 800px; text-align: right; }
         
         .answer-card { padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); line-height: 1.6; }
         .ans-correct { background: var(--correct-bg); color: var(--correct-text); border-color: #bbf7d0; }
         .ans-wrong { background: var(--wrong-bg); color: var(--wrong-text); border-color: #fecaca; }
         .close-btn { background: var(--text-main); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 15px; }
         .view-only-hide { display: none !important; }
+
+        /* تصميم شهادة الشكر والتقدير */
+        .certificate-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fffdf0 100%);
+            border: 6px double #d97706;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 15px 0 20px 0;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(217, 119, 6, 0.12);
+        }
+        .certificate-badge { font-size: 2.8rem; margin-bottom: 5px; }
+        .certificate-title { font-size: 1.6rem; font-weight: 900; color: #b45309; margin: 5px 0; }
+        .certificate-body { font-size: 1.05rem; line-height: 1.8; color: #334155; margin: 15px 0; }
+        .certificate-signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dashed #cbd5e1;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
@@ -178,6 +205,32 @@
     </div>
 </div>
 
+<!-- نافذة التقرير الذكي ومستوى الطالب مع شهادة التفوق -->
+<div id="student-report-modal">
+    <div class="modal-content">
+        <h2 id="report-student-name" style="margin:0 0 5px 0; color:var(--accent);">تقرير أداء الطالب</h2>
+        
+        <!-- حاوية شهادة الشكر والتفوق للطلبة المتميزين (90% فأعلى) -->
+        <div id="certificate-container"></div>
+
+        <h4 style="margin: 10px 0 8px 0;">📋 سجل النماذج والاختبارات المكتملة:</h4>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border:1px solid var(--border); font-size:0.85rem;" id="student-models-table">
+                <thead>
+                    <tr style="background:#f1f5f9;">
+                        <th style="padding:8px; text-align:right;">النموذج</th>
+                        <th style="padding:8px; text-align:center;">الدرجة</th>
+                        <th style="padding:8px; text-align:center;">النسبة والتصنيف</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <button class="close-btn" onclick="closeModal('student-report-modal')">إغلاق التقرير</button>
+    </div>
+</div>
+
 <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
@@ -229,7 +282,6 @@
     function renderTableFromSnapshot() {
         let scores = [], rows = "";
         let levels = { exc: 0, vgood: 0, good: 0, acc: 0, weak: 0 };
-        // مفاتيح المهارات السبعة المطلوبة المحددة بشكل مطابق
         let skillsSums = { mcq: 0, def: 0, num: 0, men: 0, mat: 0, tf: 0, cor: 0 };
         let studentCount = 0;
         let studentsList = [];
@@ -265,6 +317,7 @@
                     }).join('')}
                     <td>${actualModel}</td>
                     <td class="no-print ${isViewOnly ? 'view-only-hide' : ''}">
+                        <button class="action-btn btn-level" data-student="${encodeURIComponent(d.name)}" onclick="openStudentReport(decodeURIComponent(this.getAttribute('data-student')))">📊 المستوى</button>
                         <button class="action-btn btn-review" onclick="openReview('${d.id}')">👁 مراجعة الإجابات ونوعها</button>
                         <button class="action-btn btn-edit-name" onclick="openEditNameModal('${d.id}', '${d.name}', '${d.email || ''}')">✏️ تعديل</button>
                         <button class="action-btn btn-delete" onclick="deleteDoc('${d.id}', '${d.email || ''}', '${actualModel}')">حذف</button>
@@ -278,6 +331,64 @@
         updateRankings(studentsList);
         let avgSkills = ['mcq','def','num','men','mat','tf','cor'].map(k => studentCount > 0 ? Math.round(skillsSums[k] / studentCount) : 0);
         drawCharts(levels, avgSkills);
+    }
+
+    function openStudentReport(studentName) {
+        document.getElementById('report-student-name').innerText = `👤 تقرير أداء الطالب: ${studentName}`;
+        let studentRecords = globalSnapshotData.filter(item => item.name === studentName);
+        if (studentRecords.length === 0) return;
+
+        let totalScoreSum = 0;
+        let totalMaxSum = 0;
+        let tableRowsHtml = "";
+
+        studentRecords.forEach(rec => {
+            let mName = rec.model_id || 'سورة البقرة';
+            let tMax = rec.total || 100;
+            let pct = Math.round((rec.score / tMax) * 100);
+            
+            totalScoreSum += Number(rec.score || 0);
+            totalMaxSum += Number(tMax);
+
+            tableRowsHtml += `
+                <tr>
+                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;"><b>${mName}</b></td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:var(--accent); font-weight:bold;">${rec.score} من ${tMax}</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;"><span style="font-weight:bold; color:#166534; padding:3px 8px; background:#dcfce7; border-radius:12px;">${pct}%</span></td>
+                </tr>
+            `;
+        });
+
+        document.querySelector("#student-models-table tbody").innerHTML = tableRowsHtml;
+
+        let cumulativePct = totalMaxSum > 0 ? Math.round((totalScoreSum / totalMaxSum) * 100) : 0;
+        const certContainer = document.getElementById('certificate-container');
+
+        if (cumulativePct >= 90) {
+            certContainer.innerHTML = `
+                <div class="certificate-card">
+                    <div class="certificate-badge">🏆🎖️</div>
+                    <div class="certificate-title">شهادة شكر وتقدير وتفوق تراكمي</div>
+                    <div class="certificate-body">
+                        تتقدم إدارة المدرسة بخالص الشكر والتقدير للطالب المتميز:<br>
+                        <span style="font-size: 1.4rem; color: #0284c7; font-weight: bold; display:inline-block; margin: 8px 0;">${studentName}</span><br>
+                        وذلك لحصوله على المجموع التراكمي المتميز <b>(${totalScoreSum} من ${totalMaxSum})</b> بنسبة تفوق قدرها <b>${cumulativePct}%</b> في مادة القرآن الكريم وعلومه.<br>
+                        <i style="color: #64748b; font-size: 0.95rem;">«سائلين الله تعالى له دوام التوفيق والنجاح والعطاء المستمر»</i>
+                    </div>
+                    <div class="certificate-signatures">
+                        <div>
+                            <span>معلم المادة</span><br>
+                            <span style="color:#0284c7;">د / سامي محمد العمر</span>
+                        </div>
+                    </div>
+                    <button class="close-btn no-print" style="background: #b45309; margin-top: 15px;" onclick="window.print()">🖨️ طباعة الشهادة</button>
+                </div>
+            `;
+        } else {
+            certContainer.innerHTML = "";
+        }
+
+        document.getElementById('student-report-modal').style.display = 'flex';
     }
 
     async function openReview(docId) {
